@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs';
 
 const files = [
   '.claude-plugin/marketplace.json',
-  'plugins/claude/.claude-plugin/plugin.json'
+  'plugins/claude/.claude-plugin/plugin.json',
+  'plugins/.claude-plugin/plugin.json'
 ];
 
 const parsed = new Map();

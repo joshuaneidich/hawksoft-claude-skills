@@ -15,7 +15,7 @@ The content should be useful in two layers:
 
 - Keep vendor-neutral HawkSoft procedures under `workflows/` and canonical references under `skills/hawksoft-operations/references/`.
 - Keep `SKILL.md` files focused on routing, safety rules, and when to read supporting files.
-- Keep Claude-specific install, packaging, and namespace details under `plugins/claude/` and in user-facing README instructions.
+- Keep Claude-specific install, packaging, and namespace details under `plugins/claude/` and in user-facing README instructions; keep `plugins/` compatibility mirrors in sync when changing packaged Claude files.
 - Do not put private customer, policy, claim, payment, or protected personal information in repository examples.
 - Use fabricated test data in docs and examples.
 - Preserve the final-save guardrail: agents must pause for user approval before clicking or instructing a final action such as `Save Log`, `Save`, `Submit`, `Bind`, `Cancel Policy`, or `Delete`.
@@ -29,7 +29,7 @@ The content should be useful in two layers:
 
 ## Current plugin command
 
-The active local Claude plugin root is `plugins/claude/` because it directly contains both `.claude-plugin/` and `skills/`.
+The preferred local Claude plugin root is `plugins/claude/` because it directly contains both `.claude-plugin/` and `skills/`. A compatibility root remains at `plugins/`.
 
 The current Claude Code command is:
 

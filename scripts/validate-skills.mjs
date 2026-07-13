@@ -3,7 +3,8 @@ import { join } from 'node:path';
 
 const skillRoots = [
   join(process.cwd(), 'skills'),
-  join(process.cwd(), 'plugins', 'claude', 'skills')
+  join(process.cwd(), 'plugins', 'claude', 'skills'),
+  join(process.cwd(), 'plugins', 'skills')
 ];
 
 let validated = 0;

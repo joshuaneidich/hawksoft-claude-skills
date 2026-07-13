@@ -48,9 +48,14 @@ hawksoft-agent-guidance/
         phone-log/
 
   plugins/
+    .claude-plugin/
+      plugin.json                  # compatibility plugin root
+    skills/                        # compatibility packaged skills
+      hawksoft-operations/
+        SKILL.md
     claude/
       .claude-plugin/
-        plugin.json
+        plugin.json                # preferred Claude plugin root
       skills/
         hawksoft-operations/
           SKILL.md
@@ -93,7 +98,9 @@ Git does not track empty directories, so intentionally empty screenshot folders 
 | `skills/hawksoft-operations/references/phone-notes.md` | Canonical phone-note writing standards. |
 | `skills/hawksoft-operations/references/navigation.md` | Canonical navigation guidance for precise HawkSoft screen paths and mismatch handling. |
 | `skills/hawksoft-operations/references/safety.md` | Canonical safety rules, especially client verification and pausing before final save/submit actions. |
-| `plugins/claude/` | Claude-specific plugin adapter. This is the folder you point Claude Code at during local testing. |
+| `plugins/claude/` | Preferred Claude-specific plugin adapter. This is the folder you point Claude Code at during local testing. |
+| `plugins/.claude-plugin/plugin.json` | Compatibility plugin manifest kept so existing local commands and older PR branches that reference `plugins/` do not break while the preferred plugin root moves to `plugins/claude/`. |
+| `plugins/skills/hawksoft-operations/` | Compatibility packaged skill mirror for the old `claude --plugin-dir .\plugins` layout. Prefer editing canonical files first, then syncing packaged copies. |
 | `plugins/claude/.claude-plugin/plugin.json` | Claude plugin manifest. Its `name` is `hawksoft`, which creates the `/hawksoft:` namespace. |
 | `plugins/claude/skills/hawksoft-operations/SKILL.md` | Claude-packaged skill entry point. It mirrors the canonical skill but uses plugin-local paths that Claude can load at runtime. |
 | `plugins/claude/skills/hawksoft-operations/tasks/` | Claude-packaged task files. These are included so the plugin works when loaded from `plugins/claude`. |
@@ -141,13 +148,13 @@ So: a workflow is not just a list of “what” items pointing to a separate ski
 
 ## Local Claude Code development
 
-The Claude plugin root is now:
+The preferred Claude plugin root is now:
 
 ```text
 plugins/claude
 ```
 
-Run this from the repo root in PowerShell:
+Run this from the repo root in PowerShell for the preferred layout:
 
 ```powershell
 claude --plugin-dir .\plugins\claude
@@ -171,7 +178,7 @@ The namespace comes from:
 - Skill folder under `plugins/claude/skills/`: `hawksoft-operations`
 - Full command: `/hawksoft:hawksoft-operations`
 
-When editing the plugin during a Claude Code session, run:
+If you still need the earlier compatibility layout, `claude --plugin-dir .\plugins` is also kept available. When editing the plugin during a Claude Code session, run:
 
 ```text
 /reload-plugins
