@@ -50,9 +50,9 @@ In the HawkSoft toolbar, select:
 
 **Action**
 
-Use this screenshot for orientation:
+If available, use this canonical screenshot for orientation:
 
-![HawkSoft Action menu with Phone selected](../screenshots/phone-log/01-action-phone.png)
+`../../skills/hawksoft-operations/screenshots/phone-log/01-action-phone.png`
 
 ### 3. Select the communication method
 
@@ -94,9 +94,9 @@ Before entering the note, confirm that the breadcrumb at the top reads:
 
 **Phone > From > Insured > Log**
 
-Use this screenshot for orientation:
+If available, use this canonical screenshot for orientation:
 
-![HawkSoft Create Log window](../screenshots/phone-log/02-create-log-window.png)
+`../../skills/hawksoft-operations/screenshots/phone-log/02-create-log-window.png`
 
 If the breadcrumb does not match, go back and correct the selected options.
 
@@ -104,7 +104,7 @@ If the breadcrumb does not match, go back and correct the selected options.
 
 Use the agency phone-log standards in:
 
-`../references/phone-log-standards.md`
+`../../skills/hawksoft-operations/references/phone-notes.md`
 
 The note should normally contain:
 
