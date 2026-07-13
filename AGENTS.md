@@ -13,7 +13,7 @@ The content should be useful in two layers:
 
 ## Editing principles
 
-- Keep detailed HawkSoft procedures in task and reference files under `plugins/skills/hawksoft-operations/`.
+- Keep detailed HawkSoft procedures in task and reference files under `skills/hawksoft-operations/`.
 - Keep `SKILL.md` focused on routing, safety rules, and when to read supporting files.
 - Keep Claude-specific install and namespace details in plugin metadata and user-facing README instructions.
 - Do not put private customer, policy, claim, payment, or protected personal information in repository examples.
@@ -29,12 +29,12 @@ The content should be useful in two layers:
 
 ## Current plugin command
 
-The active local Claude plugin root is `plugins/` because it directly contains both `.claude-plugin/` and `skills/`.
+The repository root is the Claude plugin root because it directly contains both `.claude-plugin/` and `skills/`. There is exactly one copy of the skill; do not create per-vendor duplicate trees.
 
-The current Claude Code command is:
+The current Claude Code command, run from the repository root, is:
 
 ```powershell
-claude --plugin-dir .\plugins
+claude --plugin-dir .
 ```
 
 The current skill command is:

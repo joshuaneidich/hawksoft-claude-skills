@@ -1,6 +1,6 @@
 # Generic HawkSoft Agent Instructions
 
-Use the repository workflows and references to guide HawkSoft procedures.
+Use the task and reference files under `skills/hawksoft-operations/` to guide HawkSoft procedures.
 
 Core rules:
 

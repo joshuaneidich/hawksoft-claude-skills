@@ -1,6 +1,6 @@
 ---
 name: hawksoft-operations
-description: Guide or perform approved HawkSoft workflows, including logging customer calls, creating clients, adding vehicles and drivers, attaching documents, and creating tasks. Use whenever the user asks how to complete or asks Claude to perform a HawkSoft operation.
+description: Guide or perform approved HawkSoft agency-management workflows. Currently covers logging inbound customer phone calls. Use whenever the user asks how to complete, or asks Claude to perform, any operation in HawkSoft.
 ---
 
 # HawkSoft Operations
@@ -56,17 +56,25 @@ When the user asks to:
 
 Read these files before proceeding:
 
-- `../../workflows/phone-notes/log-phone-note-from-insured.md`
-- `references/phone-notes.md`
-- `references/navigation.md`
-- `references/safety.md`
+- `${CLAUDE_SKILL_DIR}/tasks/log-inbound-phone-call.md`
+- `${CLAUDE_SKILL_DIR}/references/phone-log-standards.md`
+- `${CLAUDE_SKILL_DIR}/references/navigation.md`
+- `${CLAUDE_SKILL_DIR}/references/safety.md`
 
 Use these screenshots when the visible interface needs clarification:
 
-- `screenshots/phone-log/01-action-phone.png`
-- `screenshots/phone-log/02-create-log-window.png`
+- `${CLAUDE_SKILL_DIR}/screenshots/phone-log/01-action-phone.png`
+- `${CLAUDE_SKILL_DIR}/screenshots/phone-log/02-create-log-window.png`
 
 If a screenshot file is unavailable, continue with the written procedure and explain that the screenshot should be added later.
+
+### Requests without a documented task
+
+If the user asks for a HawkSoft operation that has no task file above:
+
+1. Say that the operation is not yet covered by an agency-approved procedure.
+2. In guidance mode, general HawkSoft advice may be offered only when clearly labeled as not agency-approved.
+3. In execution mode, do not perform the operation. Never execute an undocumented workflow.
 
 ## Client verification
 
