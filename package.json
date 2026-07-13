@@ -1,13 +1,15 @@
 {
-  "name": "hawksoft skills",
-  "version": "1.0.0",
-  "description": "",
-  "main": "../index.js",
+  "name": "hawksoft-agent-guidance",
+  "version": "0.1.0",
+  "description": "Reusable agent guidance and Claude plugin skills for HawkSoft workflows.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "validate:json": "node scripts/validate-json.mjs",
+    "validate:skills": "node scripts/validate-skills.mjs",
+    "test": "npm run validate:json && npm run validate:skills"
   },
   "private": true,
   "devDependencies": {
     "skills": "^1.5.15"
-  }
+  },
+  "type": "module"
 }
