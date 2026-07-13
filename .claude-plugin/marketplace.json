@@ -6,6 +6,12 @@
   "plugins": [
     {
       "name": "hawksoft",
+      "source": "./plugins/claude"
+    }
+  ],
+  "owner": {
+    "name": "Access Insurance"
+  }
       "path": "plugins"
     }
   ]
