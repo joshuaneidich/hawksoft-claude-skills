@@ -54,12 +54,10 @@ When the user asks to:
 - Record a call from an insured
 - Add a customer conversation to HawkSoft
 
-Read these files before proceeding:
+Read both of these files before proceeding:
 
 - `${CLAUDE_SKILL_DIR}/tasks/log-inbound-phone-call.md`
 - `${CLAUDE_SKILL_DIR}/references/phone-log-standards.md`
-- `${CLAUDE_SKILL_DIR}/references/navigation.md`
-- `${CLAUDE_SKILL_DIR}/references/safety.md`
 
 Use these screenshots when the visible interface needs clarification:
 
