@@ -1,0 +1,13 @@
+# Node dependencies
+node_modules/
+
+# JetBrains IDE folder (since you are using WebStorm/IntelliJ)
+../.idea/
+
+# Environment variables (if you ever use them)
+.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
