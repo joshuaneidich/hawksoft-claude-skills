@@ -2,17 +2,14 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
   "name": "hawksoft-claude-skills",
   "displayName": "HawkSoft Claude Skills",
-  "description": "Local marketplace metadata for HawkSoft Claude plugin development.",
+  "description": "Marketplace metadata for the HawkSoft Claude plugin.",
+  "owner": {
+    "name": "Access Insurance"
+  },
   "plugins": [
     {
       "name": "hawksoft",
-      "source": "./plugins/claude"
-    }
-  ],
-  "owner": {
-    "name": "Access Insurance"
-  }
-      "path": "plugins"
+      "source": "./"
     }
   ]
 }

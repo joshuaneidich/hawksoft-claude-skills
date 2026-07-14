@@ -1,9 +1,9 @@
 # Claude HawkSoft Agent Instructions
 
-For Claude Code local testing, load the plugin from:
+For Claude Code local testing, load the plugin from the repository root:
 
 ```powershell
-claude --plugin-dir .\plugins\claude
+claude --plugin-dir .
 ```
 
 Then invoke:
@@ -12,4 +12,4 @@ Then invoke:
 /hawksoft:hawksoft-operations
 ```
 
-The Claude plugin adapter mirrors the canonical HawkSoft skill and packages the files Claude needs at runtime.
+The repository root is the plugin: `.claude-plugin/plugin.json` provides the `hawksoft` namespace and `skills/hawksoft-operations/` provides the skill.

@@ -23,18 +23,21 @@ If an instruction needs to guide every AI agent working in this repository, put 
 | `README.md` | Human-facing guide. Use it to understand the repository layout, local Claude Code command, testing prompts, screenshot placement, how to add tasks, and how this can be reused outside Claude. |
 | `AGENTS.md` | Agent-facing source of truth for future edits to this repository. It explains project intent, guardrails, terminology, and validation expectations. |
 | `CLAUDE.md` | Claude-specific pointer that sends Claude to `AGENTS.md` instead of duplicating instructions. |
-| `.claude-plugin/marketplace.json` | Optional top-level marketplace metadata. It is not required for local `claude --plugin-dir` testing, but it documents how the repo-level marketplace would reference the local plugin. |
-| `plugins/` | The current local Claude plugin root. This is the folder passed to `claude --plugin-dir .\plugins` because it directly contains `.claude-plugin/` and `skills/`. |
-| `plugins/.claude-plugin/plugin.json` | Claude plugin manifest. The `name` field is `hawksoft`, which creates the `/hawksoft:` namespace. |
-| `plugins/skills/` | Folder containing Claude skill folders bundled by the plugin. Each direct child folder is one skill. |
-| `plugins/skills/hawksoft-operations/` | The current HawkSoft operations skill folder. This folder is what produces the `hawksoft-operations` part of `/hawksoft:hawksoft-operations`. |
-| `plugins/skills/hawksoft-operations/SKILL.md` | The skill entry point. It should stay relatively concise and focus on when to use the skill, how to route tasks, what guardrails apply, and which supporting files to read. |
-| `plugins/skills/hawksoft-operations/tasks/` | Detailed one-procedure task walkthroughs. A task is the “how to do this exact HawkSoft job” file. |
-| `plugins/skills/hawksoft-operations/tasks/log-inbound-phone-call.md` | Detailed workflow for logging an inbound phone call from an insured using `Action > Phone > From > Insured > Log`. |
-| `plugins/skills/hawksoft-operations/references/` | Standards and reusable background material shared by tasks. Reference files are not usually full workflows by themselves. |
-| `plugins/skills/hawksoft-operations/references/phone-log-standards.md` | Phone-log writing style, examples, activity-tag guidance, and “do not claim completion prematurely” rules. |
-| `plugins/skills/hawksoft-operations/screenshots/` | Visual context for workflows. This folder is tracked with placeholder files so the structure is present even before real screenshots are added. |
-| `plugins/skills/hawksoft-operations/screenshots/phone-log/` | Screenshot folder for the phone-log workflow. Add `01-action-phone.png`, `02-create-log-window.png`, and later screenshots for `Phone > From`, `From > Insured`, and `Insured > Log`. |
+| `.claude-plugin/marketplace.json` | Marketplace metadata. It lets the repository be added as a Claude plugin marketplace and points the `hawksoft` plugin at the repository root. |
+| `.claude-plugin/plugin.json` | Claude plugin manifest. The `name` field is `hawksoft`, which creates the `/hawksoft:` namespace. Because this sits at the repository root next to `skills/`, the repository itself is the plugin. |
+| `skills/` | Folder containing skill folders bundled by the plugin. Each direct child folder is one skill. |
+| `skills/hawksoft-operations/` | The current HawkSoft operations skill folder. This folder is what produces the `hawksoft-operations` part of `/hawksoft:hawksoft-operations`. |
+| `skills/hawksoft-operations/SKILL.md` | The skill entry point. It should stay relatively concise and focus on when to use the skill, how to route tasks, what guardrails apply, and which supporting files to read. |
+| `skills/hawksoft-operations/tasks/` | Detailed one-procedure task walkthroughs. A task is the “how to do this exact HawkSoft job” file. |
+| `skills/hawksoft-operations/tasks/log-inbound-phone-call.md` | Detailed workflow for logging an inbound phone call from an insured using `Action > Phone > From > Insured > Log`. |
+| `skills/hawksoft-operations/references/` | Standards and reusable background material shared by tasks. Reference files are not usually full workflows by themselves. |
+| `skills/hawksoft-operations/references/phone-log-standards.md` | Phone-log writing style, examples, activity-tag guidance, and “do not claim completion prematurely” rules. |
+| `skills/hawksoft-operations/references/navigation.md` | Navigation conventions: use exact breadcrumb-style screen paths and stop when the interface differs from the procedure. |
+| `skills/hawksoft-operations/references/safety.md` | Safety checklist applied before any save, submit, bind, cancel, or delete action. |
+| `skills/hawksoft-operations/screenshots/` | Visual context for workflows. This folder is tracked with placeholder files so the structure is present even before real screenshots are added. |
+| `skills/hawksoft-operations/screenshots/phone-log/` | Screenshot folder for the phone-log workflow. Add `01-action-phone.png`, `02-create-log-window.png`, and later screenshots for `Phone > From`, `From > Insured`, and `Insured > Log`. |
+| `agents/` | Vendor-specific porting notes (Claude, OpenAI, generic) that point other assistants at the same task and reference files. |
+| `docs/` | Short supporting documents: concepts, file layout, and local install notes. |
 | `scripts/validate-json.mjs` | Parses required plugin JSON files so blank or invalid manifests are caught. |
 | `scripts/validate-skills.mjs` | Verifies every skill folder has a non-empty `SKILL.md` with required frontmatter. |
 | `package.json` | Project metadata and npm scripts. `npm test` runs the validators. |
@@ -52,7 +55,7 @@ A **skill** is the agent-facing entry point. It answers questions like:
 In this repo, the skill is:
 
 ```text
-plugins/skills/hawksoft-operations/SKILL.md
+skills/hawksoft-operations/SKILL.md
 ```
 
 A **task** is a detailed workflow for one specific HawkSoft procedure. It answers questions like:
@@ -66,14 +69,14 @@ A **task** is a detailed workflow for one specific HawkSoft procedure. It answer
 In this repo, the first task is:
 
 ```text
-plugins/skills/hawksoft-operations/tasks/log-inbound-phone-call.md
+skills/hawksoft-operations/tasks/log-inbound-phone-call.md
 ```
 
 A **workflow** is the real-world business procedure. In practice, each workflow should usually become one task file. For example:
 
 ```text
 Workflow: Log inbound phone call from insured
-Task file: plugins/skills/hawksoft-operations/tasks/log-inbound-phone-call.md
+Task file: skills/hawksoft-operations/tasks/log-inbound-phone-call.md
 Skill route: SKILL.md tells Claude to read that task when the user asks to log a call or phone note
 ```
 
@@ -104,25 +107,32 @@ When you add real screenshots later, keep the `.gitkeep` files or remove them af
 ```text
 hawksoft-claude-skills/
 ├── .claude-plugin/
+│   ├── plugin.json
 │   └── marketplace.json
-├── plugins/
-│   ├── .claude-plugin/
-│   │   └── plugin.json
-│   └── skills/
-│       └── hawksoft-operations/
-│           ├── SKILL.md
-│           ├── references/
-│           │   └── phone-log-standards.md
-│           ├── screenshots/
-│           │   └── phone-log/
-│           └── tasks/
-│               └── log-inbound-phone-call.md
+├── skills/
+│   └── hawksoft-operations/
+│       ├── SKILL.md
+│       ├── tasks/
+│       │   └── log-inbound-phone-call.md
+│       ├── references/
+│       │   ├── navigation.md
+│       │   ├── phone-log-standards.md
+│       │   └── safety.md
+│       └── screenshots/
+│           └── phone-log/
+├── agents/
+│   ├── claude/
+│   ├── generic/
+│   └── openai/
+├── docs/
 ├── scripts/
+├── AGENTS.md
+├── CLAUDE.md
 ├── package.json
 └── package-lock.json
 ```
 
-For local Claude Code development, the `plugins/` directory is the plugin root because it directly contains both `.claude-plugin/` and `skills/`.
+The repository root is the plugin root because it directly contains both `.claude-plugin/` and `skills/`. There is exactly one copy of the skill.
 
 ## Local Claude Code development
 
@@ -130,7 +140,7 @@ From PowerShell on the development machine, run:
 
 ```powershell
 cd "C:\Users\joshu\OneDrive\Desktop\Projects\hawksoft skills\hawksoft-claude-skills"
-claude --plugin-dir .\plugins
+claude --plugin-dir .
 ```
 
 After Claude Code opens, run:
@@ -145,7 +155,7 @@ You should see the plugin skill namespace:
 /hawksoft:hawksoft-operations
 ```
 
-The namespace comes from `plugins/.claude-plugin/plugin.json`:
+The namespace comes from `.claude-plugin/plugin.json`:
 
 - Plugin name: `hawksoft`
 - Skill folder: `hawksoft-operations`
@@ -249,7 +259,7 @@ Show me the proposed note and stop before clicking Save Log.
 Place screenshots for the phone-log workflow in:
 
 ```text
-plugins/skills/hawksoft-operations/screenshots/phone-log/
+skills/hawksoft-operations/screenshots/phone-log/
 ```
 
 Recommended names:
@@ -269,10 +279,10 @@ Do not include screenshots of the code editor unless they directly help the agen
 
 ## Adding a new HawkSoft task
 
-1. Create a task file under `plugins/skills/hawksoft-operations/tasks/`.
-2. Add any standards or reference material under `plugins/skills/hawksoft-operations/references/`.
-3. Add any screenshots under a workflow-specific folder in `plugins/skills/hawksoft-operations/screenshots/`.
-4. Update the task-routing section in `plugins/skills/hawksoft-operations/SKILL.md` so Claude knows when to read the new files.
+1. Create a task file under `skills/hawksoft-operations/tasks/`.
+2. Add any standards or reference material under `skills/hawksoft-operations/references/`.
+3. Add any screenshots under a workflow-specific folder in `skills/hawksoft-operations/screenshots/`.
+4. Update the task-routing section in `skills/hawksoft-operations/SKILL.md` so Claude knows when to read the new files.
 5. Run `npm test`.
 
 A good task file should include:
@@ -284,20 +294,36 @@ A good task file should include:
 - Review-before-save checkpoint
 - Failure handling
 
+## Task roadmap
+
+Documented:
+
+- Log an inbound phone call from an insured
+
+Planned (not yet written — the skill must not execute these until a task file exists):
+
+- Find and verify a client
+- Open a policy
+- Attach documents
+- Create a suspense/task
+- Log an outbound call or voicemail
+
 ## Making this usable beyond Claude
 
 Keep HawkSoft procedures in plain Markdown task and reference files so they are portable. Claude-specific files should only wrap the reusable procedures.
 
 Portable content:
 
-- `plugins/skills/hawksoft-operations/tasks/*.md`
-- `plugins/skills/hawksoft-operations/references/*.md`
+- `skills/hawksoft-operations/tasks/*.md`
+- `skills/hawksoft-operations/references/*.md`
 - workflow screenshots
 
 Claude-specific content:
 
-- `plugins/.claude-plugin/plugin.json`
-- `plugins/skills/hawksoft-operations/SKILL.md`
+- `.claude-plugin/plugin.json`
 - `.claude-plugin/marketplace.json`
+- `skills/hawksoft-operations/SKILL.md` (frontmatter format; the body is plain Markdown any agent can follow)
+
+Vendor-specific porting notes live in `agents/`.
 
 If another AI tool does not support Claude plugins, copy the relevant task and reference files into that tool's instruction system and keep the same safety rules: verify the client, avoid unsupported facts, pause before save/submit actions, and test only with fabricated data first.
