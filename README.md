@@ -7,6 +7,7 @@ This repository is a Claude Code plugin that teaches an AI assistant to guide, d
 - Want to try the plugin locally? See [Quick start](#quick-start).
 - Want to add a new procedure to the existing skill? See [Add a new task to an existing skill](#add-a-new-task-to-an-existing-skill).
 - Want to create a brand-new skill? See [Create a new skill](#create-a-new-skill).
+- Prefer answering questions in a form instead of writing Markdown by hand? See [Interactive skill builder](#interactive-skill-builder).
 
 ## Quick start
 
@@ -125,9 +126,49 @@ Details on individual files:
 
 Note on empty folders: Git only tracks files, so intentionally empty screenshot folders contain `.gitkeep` placeholders. Once a folder has real screenshots, the `.gitkeep` can be removed. The phone-log task currently references two screenshots (`screenshots/phone-log/01-action-phone.png` and `02-create-log-window.png`) that have not been captured yet — this is expected: the task file tells the agent to continue without them, and the validator only requires referenced `.md` files to exist.
 
+## Interactive skill builder
+
+If you would rather answer a few questions than write Markdown by hand, the repo
+ships a small browser-based builder. It scaffolds a new skill (the "category")
+or adds a task to an existing skill, and writes the files straight into
+`skills/` using the same conventions described below.
+
+From the repository root:
+
+```bash
+npm run new-skill
+```
+
+This starts a local server (Node built-ins only — no install step) and prints a
+URL such as `http://127.0.0.1:4600`. Open it in a browser and:
+
+1. **Pick what to create** — a brand-new skill, or a task inside an existing
+   skill (the dropdown is populated from the skills already in `skills/`).
+2. **Answer the questions** — skill name and description, then the task's title,
+   purpose, screen path (breadcrumb, e.g. `Action → Phone → To → Insured → Log`),
+   trigger phrases, required information, the numbered steps, and any screenshots
+   you plan to capture.
+3. **Click "Create files."** The builder writes `SKILL.md`, the task file, and a
+   screenshot folder, and adds the task to the skill's routing section.
+
+Every generated task automatically includes a **review-before-save checkpoint**
+and a **failure-handling** section, so new skills keep the agency safety posture
+by default. To use a different port:
+
+```bash
+npm run new-skill -- --port 5000
+```
+
+After it finishes, run `npm test` to validate, then `/reload-plugins` in a
+running Claude Code session. The builder only *scaffolds* — review and refine the
+generated wording, and capture the referenced screenshots, before relying on the
+procedure. It refuses to overwrite an existing skill or task file.
+
 ## Create a new skill
 
-A skill is just a folder under `skills/` with a `SKILL.md` inside. Follow these steps:
+A skill is just a folder under `skills/` with a `SKILL.md` inside. You can either
+run the [interactive builder](#interactive-skill-builder) above or create the
+files by hand. To do it by hand, follow these steps:
 
 **1. Create the folder.** The folder name becomes the command name, so keep it lowercase-with-hyphens:
 

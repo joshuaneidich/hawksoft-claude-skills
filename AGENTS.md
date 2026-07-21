@@ -45,6 +45,22 @@ The current skill command is:
 /hawksoft:hawksoft-operations
 ```
 
+## Scaffolding new skills and tasks
+
+A browser-based builder is available for scaffolding:
+
+```bash
+npm run new-skill
+```
+
+It serves a local form (`scripts/skill-builder.mjs`, Node built-ins only) that
+writes a new skill or a new task into `skills/` using the conventions above:
+`SKILL.md` frontmatter, `${CLAUDE_SKILL_DIR}` routing, a per-workflow screenshot
+folder, and a review-before-save checkpoint plus failure-handling section in
+every task. It refuses to overwrite existing files. Generated content is a
+starting point — review the wording and preserve the final-save guardrail before
+relying on any procedure. Creating files by hand remains fully supported.
+
 ## Validation
 
 Before committing changes, run:
