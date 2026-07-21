@@ -8,8 +8,5 @@
     "test": "npm run validate:json && npm run validate:skills"
   },
   "private": true,
-  "devDependencies": {
-    "skills": "^1.5.15"
-  },
   "type": "module"
 }

@@ -6,6 +6,8 @@ For Claude Code local testing, load the plugin from the repository root:
 claude --plugin-dir .
 ```
 
+The flag requires a recent Claude Code release; see `docs/local-install.md` for troubleshooting and the marketplace-based install alternative.
+
 Then invoke:
 
 ```text

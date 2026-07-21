@@ -37,6 +37,8 @@ The current Claude Code command, run from the repository root, is:
 claude --plugin-dir .
 ```
 
+This flag requires a recent Claude Code release; see `docs/local-install.md` for troubleshooting and the marketplace-based install alternative.
+
 The current skill command is:
 
 ```text

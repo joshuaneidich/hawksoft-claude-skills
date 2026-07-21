@@ -10,10 +10,12 @@ This repository is a Claude Code plugin that teaches an AI assistant to guide, d
 
 ## Quick start
 
-From PowerShell on the development machine:
+> **Requires a recent Claude Code.** The `--plugin-dir` flag only exists in newer releases. If you see `error: unknown option '--plugin-dir'`, your install is outdated: check `claude --version`, run `claude update` (or reinstall), and try again. If you cannot update, use the [marketplace install](#install-via-the-plugin-marketplace) below instead — it works from inside any Claude Code session.
+
+From the repository root (any shell — PowerShell shown as the example):
 
 ```powershell
-cd "C:\Users\joshu\OneDrive\Desktop\Projects\hawksoft skills\hawksoft-claude-skills"
+cd path\to\hawksoft-claude-skills
 claude --plugin-dir .
 ```
 
@@ -29,6 +31,26 @@ The command name comes from two places:
 - `hawksoft-operations` — the skill folder name under `skills/`
 
 While editing files during a Claude Code session, run `/reload-plugins` to pick up changes. Before committing, run `npm test` to validate the plugin JSON and every skill.
+
+### Install via the plugin marketplace
+
+This repo is also a Claude plugin marketplace (that is what `.claude-plugin/marketplace.json` is for), so you can install it without the `--plugin-dir` flag. Start `claude` normally, then from the repository root:
+
+```text
+/plugin marketplace add .
+/plugin install hawksoft@hawksoft-claude-skills
+```
+
+Or install straight from GitHub without cloning:
+
+```text
+/plugin marketplace add joshuaneidich/hawksoft-claude-skills
+/plugin install hawksoft@hawksoft-claude-skills
+```
+
+To remove it later, run `/plugin uninstall hawksoft@hawksoft-claude-skills` and `/plugin marketplace remove hawksoft-claude-skills`.
+
+Prefer `--plugin-dir` while actively developing: it loads the working copy for the session only, so file edits plus `/reload-plugins` take effect immediately without reinstalling.
 
 ## How the pieces fit together
 
@@ -68,7 +90,11 @@ hawksoft-claude-skills/
 │       ├── tasks/           ← one file per HawkSoft procedure
 │       ├── references/      ← shared standards and conventions
 │       └── screenshots/     ← visual context, one subfolder per workflow
-├── docs/                    ← supporting docs, incl. vendor porting notes (docs/porting/)
+├── docs/
+│   ├── concepts.md          ← plugin/skill/task/reference terminology in depth
+│   ├── file-layout.md       ← why files live where they do
+│   ├── local-install.md     ← local testing and marketplace install commands
+│   └── porting/             ← vendor porting notes (Claude, OpenAI, generic)
 ├── scripts/                 ← validators run by `npm test`
 ├── AGENTS.md                ← source of truth for agents editing this repo
 ├── CLAUDE.md                ← short pointer that sends Claude to AGENTS.md
@@ -90,11 +116,14 @@ Details on individual files:
 | `skills/hawksoft-operations/references/phone-log-standards.md` | Phone-log writing style, examples, and "do not claim completion prematurely" rules. |
 | `skills/hawksoft-operations/references/navigation.md` | Breadcrumb-style screen paths; stop when the interface differs from the procedure. |
 | `skills/hawksoft-operations/references/safety.md` | Safety checklist applied before any save, submit, bind, cancel, or delete action. |
+| `docs/concepts.md` | Deeper explanation of the plugin/skill/task/reference terminology. |
+| `docs/file-layout.md` | Rationale for where files live (e.g. why porting notes are not in a root `agents/` folder). |
+| `docs/local-install.md` | Canonical local-testing and marketplace-install instructions. |
 | `docs/porting/` | Vendor-specific porting notes (Claude, OpenAI, generic) for reusing the skill content outside Claude. |
 | `scripts/validate-json.mjs` | Parses required plugin JSON files so blank or invalid manifests are caught. |
 | `scripts/validate-skills.mjs` | Verifies every skill folder has a valid `SKILL.md` and that every routed file exists. |
 
-Note on empty folders: Git only tracks files, so intentionally empty screenshot folders contain `.gitkeep` placeholders. Once a folder has real screenshots, the `.gitkeep` can be removed.
+Note on empty folders: Git only tracks files, so intentionally empty screenshot folders contain `.gitkeep` placeholders. Once a folder has real screenshots, the `.gitkeep` can be removed. The phone-log task currently references two screenshots (`screenshots/phone-log/01-action-phone.png` and `02-create-log-window.png`) that have not been captured yet — this is expected: the task file tells the agent to continue without them, and the validator only requires referenced `.md` files to exist.
 
 ## Create a new skill
 
@@ -253,6 +282,8 @@ Planned (not yet written — the skill must not execute these until a task file 
 ## Using this beyond Claude
 
 HawkSoft procedures live in plain Markdown task and reference files so they stay portable. Claude-specific files only wrap the reusable procedures.
+
+The skill itself follows the open [Agent Skills](https://code.claude.com/docs/en/skills) convention — a folder containing a `SKILL.md` with `name` and `description` frontmatter plus supporting files. Any tool that supports that convention can consume `skills/hawksoft-operations/` directly. One caveat: the `${CLAUDE_SKILL_DIR}` variable used in file references is Claude-specific; other consumers should read those references as paths relative to the skill folder.
 
 Portable content:
 

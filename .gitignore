@@ -1,8 +1,8 @@
 # Node dependencies
 node_modules/
 
-# JetBrains IDE folder (since you are using WebStorm/IntelliJ)
-../.idea/
+# JetBrains IDE folder (WebStorm/IntelliJ)
+.idea/
 
 # Environment variables (if you ever use them)
 .env
