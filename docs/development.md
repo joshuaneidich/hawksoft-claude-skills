@@ -55,9 +55,10 @@ hawksoft-claude-skills/
 │   ├── validate-json.mjs    ← validates plugin JSON (run by `npm test`)
 │   ├── validate-skills.mjs  ← validates skill frontmatter/routing (run by `npm test`)
 │   ├── skill-builder.mjs    ← interactive builder (`npm run new-skill`)
-│   ├── build-variants.mjs   ← builds the enforcement variants (`npm run build`)
-│   └── hawksoft-guard.mjs   ← hook script bundled into the strict variant
-├── dist/                    ← build output (gitignored)
+│   ├── build.mjs            ← vendor build orchestrator (`npm run build`)
+│   ├── translations/        ← one module per vendor (claude.mjs, chatgpt.mjs)
+│   └── hawksoft-guard.mjs   ← hook script bundled into Claude's strict variant
+├── dist/                    ← build output, one folder per vendor (gitignored)
 ├── AGENTS.md                ← source of truth for agents editing this repo
 ├── CLAUDE.md                ← short pointer that sends Claude to AGENTS.md
 └── package.json             ← npm scripts (test, new-skill, build)
@@ -111,41 +112,73 @@ The builder only *scaffolds* — review the wording and capture the referenced
 screenshots before relying on the procedure. It refuses to overwrite an existing
 skill or task file. Creating files by hand (below) is fully supported too.
 
-## Enforcement variants (`npm run build`)
+## Vendor builds (`npm run build`)
 
-Claude Code has no install-time prompt, so the customer picks activation behavior
-by choosing which build output to install. `npm run build`
-(`scripts/build-variants.mjs`) writes three complete, installable copies of the
-plugin to `dist/` and prints which folder does what:
+The skill has one source of truth (`skills/hawksoft-operations/`). `npm run build`
+(`scripts/build.mjs`) turns it into per-vendor deliverables, each in its own
+namespaced folder under `dist/`:
+
+```text
+dist/
+├── claude/     ← native plugin, in three activation variants
+└── chatgpt/    ← ChatGPT Skill bundle (same SKILL.md format, routing adapted)
+```
+
+Each vendor is a **translation module** at `scripts/translations/<id>.mjs` that
+exports `meta` (`id`, `label`) and `translate({ repoRoot, skillsRoot, outDir })`.
+The orchestrator clears `dist/<id>/`, calls the module, and prints its summary.
+Build everything with `npm run build`, or one vendor with `npm run build:claude` /
+`npm run build:chatgpt` (or `node scripts/build.mjs <id>`). **Adding a vendor** is:
+drop a `translations/<id>.mjs`, add it to the `registry` array in `build.mjs`.
+`dist/` is gitignored — regenerate any time.
+
+### Claude (`scripts/translations/claude.mjs`)
+
+Claude is the source format, so this is packaging, not translation. Claude Code
+has no install-time prompt, so the customer picks activation behavior by choosing
+which folder under `dist/claude/` to install:
 
 | Folder | Description tuning | Hook | Behavior |
 | --- | --- | --- | --- |
-| `dist/hawksoft-always-enforce/` | Strong auto-trigger | ✅ `UserPromptSubmit` | Deterministic — reminds Claude to route through the skill whenever "HawkSoft" appears in a prompt. |
-| `dist/hawksoft-soft-trigger/` | Strong auto-trigger | — | Claude auto-activates on HawkSoft requests but still uses judgment. Recommended default. |
-| `dist/hawksoft-manual/` | Restrictive | — | Activates only on explicit `/hawksoft:hawksoft-operations`. |
-
-How it works:
+| `dist/claude/hawksoft-always-enforce/` | Strong auto-trigger | ✅ `UserPromptSubmit` | Deterministic — reminds Claude to route through the skill whenever "HawkSoft" appears in a prompt. |
+| `dist/claude/hawksoft-soft-trigger/` | Strong auto-trigger | — | Claude auto-activates on HawkSoft requests but still uses judgment. Recommended default. |
+| `dist/claude/hawksoft-manual/` | Restrictive | — | Activates only on explicit `/hawksoft:hawksoft-operations`. |
 
 - The two auto variants get a description that front-loads "HawkSoft" and widens
-  the trigger surface. The manual variant gets a description that tells Claude
-  *not* to auto-activate on incidental mentions.
+  the trigger surface. The manual variant tells Claude *not* to auto-activate on
+  incidental mentions.
 - The strict variant additionally bundles a hook. Plugins load hooks from a
   `hooks/hooks.json` at the plugin root; the entry runs
   `scripts/hawksoft-guard.mjs` (copied in from the repo) via
-  `${CLAUDE_PLUGIN_ROOT}`. On each prompt, the guard reads stdin, and if the
-  prompt mentions HawkSoft it returns a `UserPromptSubmit` `additionalContext`
-  reminder to route through the skill; otherwise it stays silent.
+  `${CLAUDE_PLUGIN_ROOT}`. On each prompt the guard reads stdin, and if the prompt
+  mentions HawkSoft it returns a `UserPromptSubmit` `additionalContext` reminder;
+  otherwise it stays silent.
 
-`dist/` is gitignored — regenerate it any time. Install exactly one variant:
+Install exactly one variant, e.g. `claude --plugin-dir dist/claude/hawksoft-always-enforce`.
 
-```powershell
-claude --plugin-dir dist\hawksoft-always-enforce
-```
+### ChatGPT (`scripts/translations/chatgpt.mjs`)
 
-The three variants share the same command and procedures; they differ only in how
-eagerly the skill engages.
+ChatGPT's Skills feature uses the **same `SKILL.md` convention** as Claude — YAML
+frontmatter (`name` + `description`) plus a Markdown body and optional bundled
+resource folders, uploaded as a zip whose contents are a single top-level folder
+(≤ 50 MB) via `POST /v1/skills` or the ChatGPT app (Business/Enterprise/Edu). So
+the translation is faithful — it copies the skill folder and adapts only the
+Claude-specific bits:
 
-### Verify the strict variant
+- `${CLAUDE_SKILL_DIR}/…` routing → paths relative to the skill root.
+- The trailing `## Current request` / `$ARGUMENTS` block (a Claude plugin-command
+  convention) is removed.
+- The `.claude-plugin/` manifests are omitted.
+- `tasks/` and `references/` are already plain Markdown with relative links, so
+  they are copied unchanged.
+
+The module then **validates** the bundle (frontmatter present, no leftover
+`${CLAUDE_SKILL_DIR}` or `$ARGUMENTS`, every routed `.md` resolves) and throws if
+anything is off, so the output cannot silently drift from the source. Output is
+`dist/chatgpt/hawksoft-operations/` plus `dist/chatgpt/README.md` with zip/upload
+steps and fallbacks (Projects, Custom GPTs) for workspaces without Skills.
+
+### Verify the Claude strict variant
 
 The description tuning is easy to eyeball, but the `always-enforce` hook only runs
 inside a live Claude Code session — `npm test` and the build do not exercise it.
@@ -165,11 +198,11 @@ Before relying on strict enforcement, do this smoke test once:
 2. **Build and install only the strict variant:**
 
    ```bash
-   npm run build
+   npm run build:claude
    ```
 
    ```text
-   claude --plugin-dir dist/hawksoft-always-enforce
+   claude --plugin-dir dist/claude/hawksoft-always-enforce
    ```
 
 3. **Confirm the hook is registered.** In the session, run `/hooks` and verify a
@@ -278,10 +311,16 @@ files to exist — so referencing a not-yet-captured screenshot is expected.
 HawkSoft procedures live in plain Markdown task and reference files so they stay
 portable. The skill follows the open
 [Agent Skills](https://code.claude.com/docs/en/skills) convention — a folder with
-a `SKILL.md` (`name` + `description` frontmatter) plus supporting files. Any tool
-that supports that convention can consume `skills/hawksoft-operations/` directly.
-One caveat: the `${CLAUDE_SKILL_DIR}` variable is Claude-specific; other consumers
-should read those references as paths relative to the skill folder.
+a `SKILL.md` (`name` + `description` frontmatter) plus supporting files. That
+convention is now shared across tools: **ChatGPT's Skills feature uses the same
+`SKILL.md` format**, which is why the ChatGPT translation is a faithful copy
+rather than a rewrite. Run `npm run build:chatgpt` to produce an upload-ready
+bundle (see the [ChatGPT build](#chatgpt-scriptstranslationschatgptmjs) above).
+
+The one Claude-specific detail is the `${CLAUDE_SKILL_DIR}` routing variable; the
+build rewrites it to relative paths for other consumers, and any tool reading the
+source directly should treat those references as paths relative to the skill
+folder.
 
 Portable content: `skills/hawksoft-operations/tasks/*.md`,
 `skills/hawksoft-operations/references/*.md`, and workflow screenshots.

@@ -1,5 +1,21 @@
-# OpenAI HawkSoft Agent Instructions
+# OpenAI / ChatGPT HawkSoft Agent Instructions
 
-Use this file as a starting point when porting the HawkSoft guidance to an OpenAI assistant, Codex skill, or custom agent.
+ChatGPT's Skills feature uses the same `SKILL.md` convention as this repo, so no
+manual porting is needed — the build produces an upload-ready bundle for you.
 
-Load the relevant task from `skills/hawksoft-operations/tasks/`, then use the references in `skills/hawksoft-operations/references/` for standards and safety rules. The `SKILL.md` body in `skills/hawksoft-operations/` is plain Markdown routing and guardrails that can be copied into any agent's instruction system.
+```bash
+npm run build:chatgpt
+```
+
+Output: `dist/chatgpt/hawksoft-operations/` (zip that folder and upload it) plus
+`dist/chatgpt/README.md` with the exact zip and upload steps, availability notes,
+and fallbacks for workspaces without Skills (ChatGPT Projects or a Custom GPT).
+
+The build copies the skill and adapts only the Claude-specific bits (rewrites
+`${CLAUDE_SKILL_DIR}` routing to relative paths, drops the `$ARGUMENTS` tail, omits
+`.claude-plugin/`), then validates the result. Keep the same safety rules: verify
+the client, avoid unsupported facts, pause before save/submit/bind/cancel/delete
+actions, and test only with fabricated data first.
+
+See `docs/development.md` for how the translation works and how to add more
+vendors.

@@ -7,7 +7,9 @@
     "validate:skills": "node scripts/validate-skills.mjs",
     "test": "npm run validate:json && npm run validate:skills",
     "new-skill": "node scripts/skill-builder.mjs",
-    "build": "node scripts/build-variants.mjs"
+    "build": "node scripts/build.mjs",
+    "build:claude": "node scripts/build.mjs claude",
+    "build:chatgpt": "node scripts/build.mjs chatgpt"
   },
   "private": true,
   "type": "module"

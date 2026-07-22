@@ -61,15 +61,21 @@ every task. It refuses to overwrite existing files. Generated content is a
 starting point — review the wording and preserve the final-save guardrail before
 relying on any procedure. Creating files by hand remains fully supported.
 
-## Enforcement variants
+## Vendor builds
 
-`npm run build` (`scripts/build-variants.mjs`) generates three installable copies
-of the plugin into `dist/` (gitignored) — `hawksoft-always-enforce`,
-`hawksoft-soft-trigger`, and `hawksoft-manual` — that differ only in how eagerly
-the skill activates. The strict variant bundles a `UserPromptSubmit` hook
-(`scripts/hawksoft-guard.mjs`). The canonical source under `skills/` is the single
-source of truth; the variants are derived from it at build time, so edit the
-source, not `dist/`. See `docs/development.md` for details.
+`npm run build` (`scripts/build.mjs`) turns the single source under `skills/` into
+per-vendor deliverables, each in its own namespaced folder under `dist/`
+(gitignored): `dist/claude/` (the native plugin in three activation variants —
+`hawksoft-always-enforce` with a bundled `UserPromptSubmit` hook,
+`hawksoft-soft-trigger`, `hawksoft-manual`) and `dist/chatgpt/` (a ChatGPT Skill
+bundle; ChatGPT Skills use the same `SKILL.md` format, so only the Claude-specific
+routing is adapted, and the module validates its output).
+
+Each vendor is a translation module at `scripts/translations/<id>.mjs` exporting
+`meta` and `translate(...)`, registered in `build.mjs`. Add a vendor by adding a
+module and registering it. `skills/` is the single source of truth — edit it, not
+`dist/`. Build one vendor with `npm run build:claude` / `npm run build:chatgpt`.
+See `docs/development.md` for details.
 
 ## Documentation split
 

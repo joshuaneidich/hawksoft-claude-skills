@@ -6,8 +6,9 @@
 // skill and honors its safety rules — turning the skill's soft auto-trigger into
 // a deterministic one. When HawkSoft is not mentioned, it stays silent.
 //
-// It is copied into dist/hawksoft-always-enforce/scripts/ by scripts/build-variants.mjs
-// and referenced from that variant's hooks/hooks.json via ${CLAUDE_PLUGIN_ROOT}.
+// It is copied into dist/claude/hawksoft-always-enforce/scripts/ by the Claude
+// translation (scripts/translations/claude.mjs) and referenced from that variant's
+// hooks/hooks.json via ${CLAUDE_PLUGIN_ROOT}.
 
 import { stdin } from 'node:process';
 

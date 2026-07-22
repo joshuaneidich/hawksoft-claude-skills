@@ -78,25 +78,34 @@ generate three ready-to-install variants and pick the folder that matches:
 npm run build
 ```
 
-This writes three complete, installable copies to `dist/` and prints which folder
-does what:
+The build writes one folder per vendor under `dist/`. The Claude variants live in
+`dist/claude/` and print which folder does what:
 
 | Folder | Behavior |
 | --- | --- |
-| `dist/hawksoft-always-enforce/` | **Strict.** A bundled hook makes Claude route through the skill *every time* HawkSoft is mentioned. Closest to "always." |
-| `dist/hawksoft-soft-trigger/` | **Recommended default.** A strong description auto-activates the skill on HawkSoft requests; Claude still uses judgment. No hook. |
-| `dist/hawksoft-manual/` | **Manual.** The skill activates only when you run `/hawksoft:hawksoft-operations` explicitly. |
+| `dist/claude/hawksoft-always-enforce/` | **Strict.** A bundled hook makes Claude route through the skill *every time* HawkSoft is mentioned. Closest to "always." |
+| `dist/claude/hawksoft-soft-trigger/` | **Recommended default.** A strong description auto-activates the skill on HawkSoft requests; Claude still uses judgment. No hook. |
+| `dist/claude/hawksoft-manual/` | **Manual.** The skill activates only when you run `/hawksoft:hawksoft-operations` explicitly. |
 
 Install exactly one, e.g.:
 
 ```powershell
-claude --plugin-dir dist\hawksoft-always-enforce
+claude --plugin-dir dist\claude\hawksoft-always-enforce
 ```
 
 All three expose the same `/hawksoft:hawksoft-operations` command and the same
 procedures — they differ only in how eagerly the skill engages. See
-[`docs/development.md`](docs/development.md#enforcement-variants-npm-run-build) for
-how the variants are built.
+[`docs/development.md`](docs/development.md#vendor-builds-npm-run-build) for how the
+builds work.
+
+## Use it in ChatGPT
+
+The same `npm run build` also produces a **ChatGPT** bundle. ChatGPT's Skills
+feature uses the same `SKILL.md` format as this repo, so the port is faithful — no
+rewrite. After building, the bundle is at `dist/chatgpt/hawksoft-operations/`; zip
+that folder and upload it (ChatGPT Settings on Business/Enterprise/Edu workspaces,
+or `POST /v1/skills`). Full steps and fallbacks (Projects, Custom GPTs) are in
+`dist/chatgpt/README.md`. Build just this one with `npm run build:chatgpt`.
 
 ## Safety posture
 
