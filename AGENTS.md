@@ -61,6 +61,23 @@ every task. It refuses to overwrite existing files. Generated content is a
 starting point — review the wording and preserve the final-save guardrail before
 relying on any procedure. Creating files by hand remains fully supported.
 
+## Enforcement variants
+
+`npm run build` (`scripts/build-variants.mjs`) generates three installable copies
+of the plugin into `dist/` (gitignored) — `hawksoft-always-enforce`,
+`hawksoft-soft-trigger`, and `hawksoft-manual` — that differ only in how eagerly
+the skill activates. The strict variant bundles a `UserPromptSubmit` hook
+(`scripts/hawksoft-guard.mjs`). The canonical source under `skills/` is the single
+source of truth; the variants are derived from it at build time, so edit the
+source, not `dist/`. See `docs/development.md` for details.
+
+## Documentation split
+
+User-facing usage lives in `README.md`. Contributor and technical documentation
+(layout, concepts, the skill builder, the variant build, adding procedures) lives
+in `docs/development.md`. Keep this file (`AGENTS.md`) as the agent source of
+truth.
+
 ## Validation
 
 Before committing changes, run:

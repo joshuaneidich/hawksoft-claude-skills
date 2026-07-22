@@ -6,7 +6,8 @@
     "validate:json": "node scripts/validate-json.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "test": "npm run validate:json && npm run validate:skills",
-    "new-skill": "node scripts/skill-builder.mjs"
+    "new-skill": "node scripts/skill-builder.mjs",
+    "build": "node scripts/build-variants.mjs"
   },
   "private": true,
   "type": "module"
