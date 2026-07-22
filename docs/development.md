@@ -145,6 +145,47 @@ claude --plugin-dir dist\hawksoft-always-enforce
 The three variants share the same command and procedures; they differ only in how
 eagerly the skill engages.
 
+### Verify the strict variant
+
+The description tuning is easy to eyeball, but the `always-enforce` hook only runs
+inside a live Claude Code session — `npm test` and the build do not exercise it.
+Before relying on strict enforcement, do this smoke test once:
+
+1. **Check the guard script in isolation.** It should emit a reminder for a
+   HawkSoft prompt and nothing for an unrelated one:
+
+   ```bash
+   echo '{"prompt":"log a call in HawkSoft"}' | node scripts/hawksoft-guard.mjs
+   # → prints a JSON object with hookSpecificOutput.additionalContext
+
+   echo '{"prompt":"what time is it?"}' | node scripts/hawksoft-guard.mjs
+   # → prints nothing
+   ```
+
+2. **Build and install only the strict variant:**
+
+   ```bash
+   npm run build
+   ```
+
+   ```text
+   claude --plugin-dir dist/hawksoft-always-enforce
+   ```
+
+3. **Confirm the hook is registered.** In the session, run `/hooks` and verify a
+   `UserPromptSubmit` entry pointing at `hawksoft-guard.mjs` appears. (If your
+   Claude Code prompts to approve plugin hooks on first load, approve it.)
+
+4. **Confirm it fires.** Send a prompt that mentions HawkSoft but does *not* name
+   the skill — e.g. `I need to note a customer call in HawkSoft`. Claude should
+   reach for `hawksoft-operations` and follow its procedure and safety rules.
+   Then send an unrelated prompt and confirm the reminder does *not* appear.
+
+If step 4 does not trigger, check that the plugin's hooks were approved, that
+`node` is on `PATH` in that environment, and that `/hooks` shows the entry. The
+soft-trigger and manual variants have no hook, so they need no such check — only
+their description behavior.
+
 ## Create a new skill by hand
 
 A skill is just a folder under `skills/` with a `SKILL.md` inside.
