@@ -27,6 +27,25 @@ The content should be useful in two layers:
 - A reference file contains standards, templates, examples, terminology, or policy guidance used by one or more tasks.
 - A screenshot is visual context for a task. It should illustrate HawkSoft screens, not the code editor.
 
+## Authoring branching logic in tasks
+
+Task files are prose, so express conditional flow as explicit decision blocks:
+
+- Open a branch with a bold decision line: `**Decision — <question>?**`.
+- Give one bullet per outcome: `- **<condition>** → <what to do>`.
+- Use `→` for "then"; nest a numbered list under a bullet for a multi-step branch.
+- End every decision with a terminal branch for the uncertain case —
+  `→ stop and ask the user`, or `→ this is a separate task` — so no path is left
+  undefined. This preserves the never-guess rule and the final-save guardrail.
+- Keep cross-task jumps verbal (name the other task); do not inline another full
+  procedure inside a branch.
+
+Shared preconditions that branch — most commonly finding and opening the correct
+client — live in a reference such as `references/find-and-open-a-client.md`, and a
+task's first step points to it instead of repeating the logic. Because each skill is
+bundled independently for non-Claude vendors, a shared reference must exist inside
+each skill that links to it.
+
 ## Current plugin command
 
 The repository root is the Claude plugin root because it directly contains both `.claude-plugin/` and `skills/`. There is exactly one copy of the skill; do not create per-vendor duplicate trees.

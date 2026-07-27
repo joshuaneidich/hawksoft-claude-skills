@@ -41,11 +41,22 @@ the missing details before opening the Create Log editor.
 
 ## Procedure
 
-### 1. Verify the client
+### 1. Open and verify the correct client
 
-Confirm that the correct HawkSoft client is open. Read and verify the client name,
-the client type, and the mailing address or another available identifier. Do not
-continue if the client record is uncertain.
+The correct client must be open and verified before anything else. Follow
+`../references/find-and-open-a-client.md`:
+
+**Decision — is the correct client already open and verified?**
+
+- **Yes** → continue to step 2.
+- **No / unsure** → open it via **Search** first:
+  - **Exactly one match** → open it, then verify name + address/DOB.
+  - **Multiple matches** → narrow by DOB, address, or policy number; if still
+    indistinguishable → **stop and ask the user.**
+  - **No match** → **stop.** The client may not exist; creating one is a separate
+    task. Report to the user — do not create a client here.
+
+Do not continue on an uncertain client.
 
 ### 2. Open the Action menu
 
