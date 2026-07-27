@@ -47,6 +47,11 @@ The current skill command is:
 
 ## Scaffolding new skills and tasks
 
+A skill here is a HawkSoft *category* with its own `/hawksoft:<name>` command and
+routing; a task is one procedure inside a skill. Most additions are tasks under an
+existing skill — create a new skill only for a distinct category that warrants its
+own command and routing (for example claims or billing).
+
 A browser-based builder is available for scaffolding:
 
 ```bash

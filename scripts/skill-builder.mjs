@@ -454,19 +454,20 @@ function page() {
 <body>
 <header>
   <h1>Skill Builder</h1>
-  <p>Answer the questions to scaffold a new skill or add a task. Files are written straight into the repo.</p>
+  <p>Answer the questions to add a task to an existing skill, or scaffold a new HawkSoft category. Files are written straight into the repo.</p>
 </header>
 <main>
   <fieldset>
     <legend>What do you want to create?</legend>
     <div class="mode">
-      <label><input type="radio" name="mode" value="new-skill" checked> A new skill (category)</label>
-      <label><input type="radio" name="mode" value="add-task"> A task in an existing skill</label>
+      <label><input type="radio" name="mode" value="add-task" checked> A task in an existing skill</label>
+      <label><input type="radio" name="mode" value="new-skill"> A new HawkSoft category (its own <code>/hawksoft:</code> command)</label>
     </div>
+    <p class="hint">Most additions are tasks. Create a new category only when the procedures deserve their own command and routing (e.g. claims, billing).</p>
   </fieldset>
 
-  <fieldset id="skill-fields">
-    <legend>New skill</legend>
+  <fieldset id="skill-fields" style="display:none;">
+    <legend>New HawkSoft category</legend>
     <label>Skill name <span class="hint">lowercase-with-hyphens; becomes the command <code>/hawksoft:&lt;name&gt;</code></span></label>
     <input type="text" id="skillSlug" placeholder="policy-servicing" />
     <label>Display title <span class="hint">optional; defaults from the name</span></label>
@@ -476,7 +477,7 @@ function page() {
     <label style="margin-top:14px;"><input type="checkbox" id="createTask" checked style="width:auto;margin-right:6px;"> Also add a first task now</label>
   </fieldset>
 
-  <fieldset id="existing-fields" style="display:none;">
+  <fieldset id="existing-fields">
     <legend>Existing skill</legend>
     <label>Which skill gets the new task?</label>
     <select id="existingSkill"></select>
