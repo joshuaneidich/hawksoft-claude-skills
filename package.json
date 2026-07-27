@@ -5,7 +5,8 @@
   "scripts": {
     "validate:json": "node scripts/validate-json.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
-    "test": "npm run validate:json && npm run validate:skills",
+    "sync:shared": "node scripts/sync-shared.mjs",
+    "test": "npm run validate:json && npm run validate:skills && node scripts/sync-shared.mjs --check",
     "new-skill": "node scripts/skill-builder.mjs",
     "build": "node scripts/build.mjs",
     "build:claude": "node scripts/build.mjs claude",

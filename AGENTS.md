@@ -44,7 +44,9 @@ Shared preconditions that branch — most commonly finding and opening the corre
 client — live in a reference such as `references/find-and-open-a-client.md`, and a
 task's first step points to it instead of repeating the logic. Because each skill is
 bundled independently for non-Claude vendors, a shared reference must exist inside
-each skill that links to it.
+each skill that links to it: the canonical copy lives in `shared/references/`, and
+`npm run sync:shared` copies it into every `skills/<skill>/references/`. Edit the
+canonical copy, then run the sync; `npm test` fails if any skill's copy has drifted.
 
 Optional steps should be **self-triggering from the request.** When a task has an
 optional action (adding a tag, creating a follow-up task), document how to detect it

@@ -21,9 +21,19 @@ If the user has not provided enough information, ask for the missing details bef
 
 ## Procedure
 
-### 1. Open and verify the correct client record
+### 1. Open and verify the correct client
 
-Confirm you are in the correct insured's record before doing anything else. (Fill in: how you verify the right client — name, date of birth, address, or policy number.)
+The correct client must be open and verified before anything else. Follow
+`../references/find-and-open-a-client.md`:
+
+**Decision — is the correct client already open and verified?**
+
+- **Yes** → continue to the next step.
+- **No / unsure** → open it via **Search** (one match → open and verify; multiple →
+  narrow, then ask if still unclear; no match → stop, creating a client is a separate
+  task). Verify name + address/DOB before continuing.
+
+Do not continue on an uncertain client.
 
 ### 2. Open the Action menu
 

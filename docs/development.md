@@ -123,6 +123,22 @@ The builder only *scaffolds* — review the wording and capture the referenced
 screenshots before relying on the procedure. It refuses to overwrite an existing
 skill or task file. Creating files by hand (below) is fully supported too.
 
+## Shared references (`shared/references/`)
+
+Some references apply to every skill — most notably the branchy "find and open a
+client" precondition that each task's step 1 links. A task can only link a reference
+inside its own skill (each skill is bundled independently for non-Claude vendors), so
+these live once in `shared/references/` and are copied into every
+`skills/<skill>/references/`:
+
+```bash
+npm run sync:shared        # copy shared references into every skill
+```
+
+Edit the **canonical** copy under `shared/references/`, never the per-skill copies —
+`npm test` runs `sync-shared.mjs --check` and fails if any skill's copy has drifted,
+so run `npm run sync:shared` and commit the result after changing a shared reference.
+
 ## Vendor builds (`npm run build`)
 
 The skills under `skills/` are the single source of truth. `npm run build`
