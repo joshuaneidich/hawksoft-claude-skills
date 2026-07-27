@@ -100,12 +100,13 @@ builds work.
 
 ## Use it in ChatGPT
 
-The same `npm run build` also produces a **ChatGPT** bundle. ChatGPT's Skills
-feature uses the same `SKILL.md` format as this repo, so the port is faithful — no
-rewrite. After building, the bundle is at `dist/chatgpt/hawksoft-operations/`; zip
-that folder and upload it (ChatGPT Settings on Business/Enterprise/Edu workspaces,
-or `POST /v1/skills`). Full steps and fallbacks (Projects, Custom GPTs) are in
-`dist/chatgpt/README.md`. Build just this one with `npm run build:chatgpt`.
+The same `npm run build` also produces **ChatGPT** bundles — one per skill, since
+ChatGPT uploads one zip per skill. ChatGPT's Skills feature uses the same
+`SKILL.md` format as this repo, so the port is faithful — no rewrite. After
+building, each bundle is at `dist/chatgpt/<skill>/`; zip each folder and upload it
+(ChatGPT Settings on Business/Enterprise/Edu workspaces, or `POST /v1/skills`).
+Full steps and fallbacks (Projects, Custom GPTs) are in `dist/chatgpt/README.md`.
+Build just these with `npm run build:chatgpt`.
 
 ## Safety posture
 

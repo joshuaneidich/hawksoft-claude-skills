@@ -72,9 +72,9 @@ relying on any procedure. Creating files by hand remains fully supported.
 per-vendor deliverables, each in its own namespaced folder under `dist/`
 (gitignored): `dist/claude/` (the native plugin in three activation variants —
 `hawksoft-always-enforce` with a bundled `UserPromptSubmit` hook,
-`hawksoft-soft-trigger`, `hawksoft-manual`) and `dist/chatgpt/` (a ChatGPT Skill
-bundle; ChatGPT Skills use the same `SKILL.md` format, so only the Claude-specific
-routing is adapted, and the module validates its output).
+`hawksoft-soft-trigger`, `hawksoft-manual`) and `dist/chatgpt/` (one ChatGPT Skill
+bundle per skill; ChatGPT Skills use the same `SKILL.md` format, so only the
+Claude-specific routing is adapted, and the module validates each bundle's output).
 
 Each vendor is a translation module at `scripts/translations/<id>.mjs` exporting
 `meta` and `translate(...)`, registered in `build.mjs`. Add a vendor by adding a

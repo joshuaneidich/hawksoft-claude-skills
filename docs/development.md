@@ -132,7 +132,7 @@ namespaced folder under `dist/`:
 ```text
 dist/
 ├── claude/     ← native plugin, in three activation variants
-└── chatgpt/    ← ChatGPT Skill bundle (same SKILL.md format, routing adapted)
+└── chatgpt/    ← one ChatGPT Skill bundle per skill (same SKILL.md format, routing adapted)
 ```
 
 Each vendor is a **translation module** at `scripts/translations/<id>.mjs` that
@@ -183,10 +183,11 @@ Claude-specific bits:
 - `tasks/` and `references/` are already plain Markdown with relative links, so
   they are copied unchanged.
 
-The module then **validates** the bundle (frontmatter present, no leftover
+Every skill under `skills/` becomes its own bundle (ChatGPT uploads one zip per
+skill). The module then **validates** each bundle (frontmatter present, no leftover
 `${CLAUDE_SKILL_DIR}` or `$ARGUMENTS`, every routed `.md` resolves) and throws if
 anything is off, so the output cannot silently drift from the source. Output is
-`dist/chatgpt/hawksoft-operations/` plus `dist/chatgpt/README.md` with zip/upload
+`dist/chatgpt/<skill>/` for each skill plus `dist/chatgpt/README.md` with zip/upload
 steps and fallbacks (Projects, Custom GPTs) for workspaces without Skills.
 
 ### Verify the Claude strict variant
