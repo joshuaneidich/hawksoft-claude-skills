@@ -130,7 +130,27 @@ an agency standard requires them. If neither applies, skip to
 
 ### Optional: Add a client tag
 
-Use this when the user wants to flag the client as part of the same interaction.
+**When to do this — including automatically from the request.** Perform this step
+whenever the user's wording names or implies a tag, not only when they ask in a
+separate sentence. Treat phrasings like these as an explicit request to add a tag:
+
+- "log the call and **tag** them as **upset**"
+- "add a **billing** tag" / "**flag** this client for follow-up"
+
+Also do it when an agency standard requires a client tag for this interaction. If
+neither applies, skip this step.
+
+**Interpreting the request.**
+
+- **Client tag vs. activity tag:** if the value matches an **activity tag** (Billing,
+  Cancellation, Bind/Bound, etc.), add it as an activity tag in step 9 instead. Use a
+  **client tag** for client-level flags and sentiment (for example, "upset").
+- Map the user's words onto the dialog: pick the **Category** that best fits and put
+  the specifics in **Reason** (e.g. Reason: "Upset about premium increase").
+- If the right **Category** is unclear or not in the list, **ask the user** before
+  choosing — never invent a category.
+- Doing this automatically does **not** skip approval: the tag is staged with the log
+  and shown at [Review before saving](#10-review-before-saving); it commits on Save Log.
 
 1. In the Create Log window, select **Add Client Tag** (bottom left). The **Add
    Tag** dialog opens.

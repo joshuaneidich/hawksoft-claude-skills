@@ -46,6 +46,13 @@ task's first step points to it instead of repeating the logic. Because each skil
 bundled independently for non-Claude vendors, a shared reference must exist inside
 each skill that links to it.
 
+Optional steps should be **self-triggering from the request.** When a task has an
+optional action (adding a tag, creating a follow-up task), document how to detect it
+from the user's wording — for example, "tag them as upset" means add the tag — so the
+assistant performs it automatically when implied, maps the user's words onto the
+dialog's fields, asks when a required field is ambiguous rather than inventing one,
+and still surfaces the staged action for approval before the final save.
+
 ## Current plugin command
 
 The repository root is the Claude plugin root because it directly contains both `.claude-plugin/` and `skills/`. There is exactly one copy of the skill; do not create per-vendor duplicate trees.
