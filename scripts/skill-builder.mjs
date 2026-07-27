@@ -23,7 +23,7 @@ import {
   statSync,
   writeFileSync
 } from 'node:fs';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -71,6 +71,38 @@ function listSkills() {
       return statSync(dir).isDirectory() && existsSync(join(dir, 'SKILL.md'));
     })
     .sort();
+}
+
+function listMdFiles(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md'))
+    .sort();
+}
+
+// A skill and every editable file under it, for the browse/edit view.
+function listTree() {
+  return listSkills().map((slug) => {
+    const dir = join(skillsRoot, slug);
+    const tasksDir = join(dir, 'tasks');
+    const refsDir = join(dir, 'references');
+    return {
+      slug,
+      skill: rel(join(dir, 'SKILL.md')),
+      tasks: listMdFiles(tasksDir).map((f) => ({ name: f, path: rel(join(tasksDir, f)) })),
+      references: listMdFiles(refsDir).map((f) => ({ name: f, path: rel(join(refsDir, f)) }))
+    };
+  });
+}
+
+// Resolve a repo-relative path to an absolute one, refusing anything that would
+// escape skills/ or that is not a Markdown file. Used by the file read/write API.
+function resolveSkillFile(relPath) {
+  const abs = join(repoRoot, String(relPath || ''));
+  const root = skillsRoot.endsWith(sep) ? skillsRoot : skillsRoot + sep;
+  if (!abs.startsWith(root)) throw new Error('Path is outside skills/.');
+  if (!abs.endsWith('.md')) throw new Error('Only Markdown (.md) files can be edited.');
+  return abs;
 }
 
 function ensureDir(dir) {
@@ -449,6 +481,24 @@ function page() {
     #result.err { background: #2a1416; color: #f0a5a9; border-color: #5a2226; }
   }
   code { background: rgba(127,127,127,.15); padding: 1px 5px; border-radius: 4px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid #d0d4da; }
+  @media (prefers-color-scheme: dark) { .tabs { border-color: #303540; } }
+  .tab { background: transparent; border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 9px 14px; font-weight: 600; opacity: .6; color: inherit; }
+  .tab.active { opacity: 1; border-bottom-color: #1f6feb; color: #1f6feb; }
+  .browse { display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 720px) { .browse { grid-template-columns: 1fr; } }
+  .tree { border: 1px solid #d0d4da; border-radius: 10px; padding: 8px; max-height: 72vh; overflow: auto; }
+  @media (prefers-color-scheme: dark) { .tree { border-color: #303540; } }
+  .tree-skill { margin-bottom: 12px; }
+  .tree-skill-name { font-weight: 700; font-size: 13px; padding: 4px 6px; opacity: .85; }
+  .tree-file { display: block; width: 100%; text-align: left; background: transparent; border: none; border-radius: 6px; padding: 5px 8px 5px 18px; font-size: 13px; color: inherit; cursor: pointer; }
+  .tree-file:hover { background: rgba(31,111,235,.10); }
+  .tree-file.sel { background: rgba(31,111,235,.18); font-weight: 600; }
+  .tree-skill-file { font-style: italic; opacity: .85; }
+  .editor { min-width: 0; }
+  .editpath { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; opacity: .8; margin-bottom: 8px; word-break: break-all; }
+  #editContent { min-height: 60vh; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; line-height: 1.5; }
+  .editbar { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -457,6 +507,12 @@ function page() {
   <p>Answer the questions to add a task to an existing skill, or scaffold a new HawkSoft category. Files are written straight into the repo.</p>
 </header>
 <main>
+  <div class="tabs">
+    <button type="button" id="tab-create" class="tab active" onclick="showView('create')">Create</button>
+    <button type="button" id="tab-browse" class="tab" onclick="showView('browse')">Browse &amp; edit</button>
+  </div>
+
+  <section id="create-view">
   <fieldset>
     <legend>What do you want to create?</legend>
     <div class="mode">
@@ -513,6 +569,22 @@ function page() {
 
   <button type="button" class="primary" onclick="submitForm()">Create files</button>
   <div id="result"></div>
+  </section>
+
+  <section id="browse-view" style="display:none;">
+    <p class="hint">Every skill and its files. Click a file to view it, edit the Markdown (this is where the step-by-step click-throughs live), then Save.</p>
+    <div class="browse">
+      <div id="tree" class="tree">Loading…</div>
+      <div class="editor">
+        <div id="editPath" class="editpath">Select a file on the left to view and edit it.</div>
+        <textarea id="editContent" spellcheck="false" style="display:none;"></textarea>
+        <div class="editbar" style="display:none;">
+          <button type="button" class="primary" onclick="saveFile()">Save changes</button>
+          <span id="editStatus" class="hint"></span>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <script>
@@ -618,6 +690,93 @@ async function submitForm() {
   }
 }
 
+function showView(which) {
+  const isCreate = which === 'create';
+  document.getElementById('create-view').style.display = isCreate ? '' : 'none';
+  document.getElementById('browse-view').style.display = isCreate ? 'none' : '';
+  document.getElementById('tab-create').classList.toggle('active', isCreate);
+  document.getElementById('tab-browse').classList.toggle('active', !isCreate);
+  if (!isCreate) loadTree();
+}
+
+async function loadTree() {
+  const box = document.getElementById('tree');
+  box.textContent = 'Loading…';
+  try {
+    const res = await fetch('/api/tree');
+    const skills = await res.json();
+    box.textContent = '';
+    if (!skills.length) { box.textContent = 'No skills yet — create one first.'; return; }
+    skills.forEach(function (s) {
+      const grp = document.createElement('div');
+      grp.className = 'tree-skill';
+      const name = document.createElement('div');
+      name.className = 'tree-skill-name';
+      name.textContent = s.slug;
+      grp.appendChild(name);
+      fileItem(grp, 'SKILL.md', s.skill, true);
+      s.tasks.forEach(function (t) { fileItem(grp, 'tasks/' + t.name, t.path, false); });
+      s.references.forEach(function (r) { fileItem(grp, 'references/' + r.name, r.path, false); });
+      box.appendChild(grp);
+    });
+  } catch (e) {
+    box.textContent = 'Could not load skills: ' + e.message;
+  }
+}
+
+function fileItem(parent, label, path, isSkill) {
+  const el = document.createElement('button');
+  el.type = 'button';
+  el.className = 'tree-file' + (isSkill ? ' tree-skill-file' : '');
+  el.textContent = label;
+  el.addEventListener('click', function () { openFile(path, el); });
+  parent.appendChild(el);
+}
+
+async function openFile(path, el) {
+  document.querySelectorAll('.tree-file.sel').forEach(function (n) { n.classList.remove('sel'); });
+  if (el) el.classList.add('sel');
+  const pathEl = document.getElementById('editPath');
+  const ta = document.getElementById('editContent');
+  const bar = document.querySelector('#browse-view .editbar');
+  const status = document.getElementById('editStatus');
+  status.textContent = '';
+  try {
+    const res = await fetch('/api/file?path=' + encodeURIComponent(path));
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'could not open file');
+    pathEl.textContent = path;
+    ta.value = data.content;
+    ta.dataset.path = path;
+    ta.style.display = '';
+    bar.style.display = 'flex';
+  } catch (e) {
+    pathEl.textContent = 'Error: ' + e.message;
+    ta.style.display = 'none';
+    bar.style.display = 'none';
+  }
+}
+
+async function saveFile() {
+  const ta = document.getElementById('editContent');
+  const status = document.getElementById('editStatus');
+  const path = ta.dataset.path;
+  if (!path) return;
+  status.textContent = 'Saving…';
+  try {
+    const res = await fetch('/api/file', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ path: path, content: ta.value })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'save failed');
+    status.textContent = 'Saved.';
+  } catch (e) {
+    status.textContent = 'Error: ' + e.message;
+  }
+}
+
 loadSkills();
 addStep();
 refreshMode();
@@ -660,6 +819,47 @@ const server = createServer(async (req, res) => {
     }
     if (req.method === 'GET' && req.url === '/api/skills') {
       json(res, 200, listSkills());
+      return;
+    }
+    if (req.method === 'GET' && req.url === '/api/tree') {
+      json(res, 200, listTree());
+      return;
+    }
+    if (req.method === 'GET' && req.url.startsWith('/api/file')) {
+      const url = new URL(req.url, 'http://127.0.0.1');
+      try {
+        const abs = resolveSkillFile(url.searchParams.get('path'));
+        if (!existsSync(abs)) {
+          json(res, 404, { error: 'File not found.' });
+          return;
+        }
+        json(res, 200, { path: url.searchParams.get('path'), content: readFileSync(abs, 'utf8') });
+      } catch (err) {
+        json(res, 400, { error: err.message });
+      }
+      return;
+    }
+    if (req.method === 'POST' && req.url === '/api/file') {
+      const body = await readBody(req);
+      let payload;
+      try {
+        payload = JSON.parse(body || '{}');
+      } catch {
+        json(res, 400, { error: 'Invalid JSON body.' });
+        return;
+      }
+      try {
+        const abs = resolveSkillFile(payload.path);
+        if (!existsSync(abs)) {
+          json(res, 404, { error: 'File not found; only existing files can be edited here.' });
+          return;
+        }
+        if (typeof payload.content !== 'string') throw new Error('content must be a string.');
+        writeFileSync(abs, payload.content);
+        json(res, 200, { ok: true, path: payload.path });
+      } catch (err) {
+        json(res, 400, { error: err.message });
+      }
       return;
     }
     if (req.method === 'POST' && req.url === '/api/generate') {

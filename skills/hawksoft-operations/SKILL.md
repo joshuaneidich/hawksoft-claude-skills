@@ -68,6 +68,61 @@ Use these screenshots when the visible interface needs clarification:
 
 If a screenshot file is unavailable, continue with the written procedure and explain that the screenshot should be added later.
 
+### Log an outbound phone call
+
+When the user asks to:
+
+- Log an outbound call
+- Record a call I made to a customer
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-an-outbound-phone-call.md`
+
+### Log a walk-in
+
+When the user asks to:
+
+- Log a walk-in
+- Record an in-person visit
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-a-walk-in.md`
+
+### Log email correspondence
+
+When the user asks to:
+
+- Log an email
+- Record correspondence with a client
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-email-correspondence.md`
+
+### Log a text message
+
+When the user asks to:
+
+- Log a text message
+- Record a text with a client
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-a-text-message.md`
+
+### Log a fax
+
+When the user asks to:
+
+- Log a fax
+- Record a fax for a client
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-a-fax.md`
+
 ### Requests without a documented task
 
 If the user asks for a HawkSoft operation that has no task file above:

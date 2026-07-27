@@ -94,15 +94,26 @@ npm run new-skill        # then open the printed http://127.0.0.1:4600 URL
 ```
 
 It starts a local, zero-dependency Node server (`scripts/skill-builder.mjs`) and
-writes files straight into `skills/`. In the form you:
+writes files straight into `skills/`. It has two tabs:
 
-1. **Pick what to create** — a new skill (the "category"), or a task inside an
-   existing skill (the dropdown is populated from `skills/`).
-2. **Answer the questions** — skill name and description, then the task's title,
-   purpose, screen path (breadcrumb, e.g. `Action → Phone → To → Insured → Log`),
-   trigger phrases, required information, numbered steps, and any screenshots.
+**Create** — scaffold a new skill or task. In the form you:
+
+1. **Pick what to create** — a task inside an existing skill (the default; the
+   dropdown is populated from `skills/`), or a new HawkSoft category (a new skill
+   with its own `/hawksoft:<name>` command). Most additions are tasks; create a new
+   category only when the procedures deserve their own command and routing.
+2. **Answer the questions** — for a new category, its name and description; then the
+   task's title, purpose, screen path (breadcrumb, e.g.
+   `Action → Phone → To → Insured → Log`), trigger phrases, required information,
+   numbered steps, and any screenshots.
 3. **Click "Create files."** It writes `SKILL.md`, the task file, and a screenshot
    folder, and adds the task to the skill's routing section.
+
+**Browse & edit** — see every skill and its files in a list, click any file to open
+its Markdown in an editor, and **Save** it back. This is where you perfect the
+step-by-step click-throughs in each task after scaffolding. Editing is limited to
+Markdown files under `skills/` (path traversal and non-`.md` files are rejected),
+and only files that already exist can be saved — use the Create tab to add new ones.
 
 Every generated task automatically includes a **review-before-save checkpoint**
 and a **failure-handling** section, so new skills keep the agency safety posture
@@ -114,8 +125,8 @@ skill or task file. Creating files by hand (below) is fully supported too.
 
 ## Vendor builds (`npm run build`)
 
-The skill has one source of truth (`skills/hawksoft-operations/`). `npm run build`
-(`scripts/build.mjs`) turns it into per-vendor deliverables, each in its own
+The skills under `skills/` are the single source of truth. `npm run build`
+(`scripts/build.mjs`) turns them into per-vendor deliverables, each in its own
 namespaced folder under `dist/`:
 
 ```text
