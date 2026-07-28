@@ -6,9 +6,10 @@
 // (packaging + variants); other vendors adapt the skill into their format.
 //
 // Usage:
-//   npm run build             # build every vendor
-//   npm run build chatgpt     # build one vendor
-//   node scripts/build.mjs claude
+//   npm run build                       # build every vendor (Claude = default variant)
+//   node scripts/build.mjs chatgpt      # build one vendor
+//   node scripts/build.mjs claude --variant strict   # a specific Claude variant
+//   node scripts/build.mjs claude --all              # every Claude variant
 
 import { mkdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -26,7 +27,15 @@ const repoRoot = join(scriptDir, '..');
 const skillsRoot = join(repoRoot, 'skills');
 const distRoot = join(repoRoot, 'dist');
 
-const only = process.argv[2];
+const rawArgs = process.argv.slice(2);
+const only = rawArgs.find((a) => !a.startsWith('-'));
+
+// Claude variant selection (ignored by other vendors): --all, or --variant <key>.
+let claudeVariants;
+if (rawArgs.includes('--all')) claudeVariants = 'all';
+const variantIdx = rawArgs.indexOf('--variant');
+if (variantIdx !== -1 && rawArgs[variantIdx + 1]) claudeVariants = rawArgs[variantIdx + 1];
+
 const selected = only ? registry.filter((m) => m.meta.id === only) : registry;
 
 if (only && selected.length === 0) {
@@ -40,7 +49,14 @@ for (const mod of selected) {
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
 
-  const summary = mod.translate({ repoRoot, skillsRoot, outDir, scriptDir });
+  const options = { variants: claudeVariants };
+  let summary;
+  try {
+    summary = mod.translate({ repoRoot, skillsRoot, outDir, scriptDir, options });
+  } catch (err) {
+    console.error(`\n${mod.meta.label} build failed: ${err.message}\n`);
+    process.exit(1);
+  }
 
   console.log(`\n${mod.meta.label}  →  dist/${mod.meta.id}/`);
   for (const line of summary) console.log('  ' + line);

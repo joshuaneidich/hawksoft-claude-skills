@@ -147,7 +147,7 @@ namespaced folder under `dist/`:
 
 ```text
 dist/
-├── claude/     ← native plugin, in three activation variants
+├── claude/     ← native plugin (default: the recommended variant; others on demand)
 └── chatgpt/    ← one ChatGPT Skill bundle per skill (same SKILL.md format, routing adapted)
 ```
 
@@ -162,14 +162,18 @@ drop a `translations/<id>.mjs`, add it to the `registry` array in `build.mjs`.
 ### Claude (`scripts/translations/claude.mjs`)
 
 Claude is the source format, so this is packaging, not translation. Claude Code
-has no install-time prompt, so the customer picks activation behavior by choosing
-which folder under `dist/claude/` to install:
+has no install-time prompt for activation behavior, so it is baked into the build
+as variants. You install exactly one, so the **default build produces only the
+recommended variant** (`dist/claude/hawksoft/`); the others are separate commands:
 
-| Folder | Description tuning | Hook | Behavior |
+| Build command | Folder | Hook | Behavior |
 | --- | --- | --- | --- |
-| `dist/claude/hawksoft-always-enforce/` | Strong auto-trigger | ✅ `UserPromptSubmit` | Deterministic — reminds Claude to route through the skill whenever "HawkSoft" appears in a prompt. |
-| `dist/claude/hawksoft-soft-trigger/` | Strong auto-trigger | — | Claude auto-activates on HawkSoft requests but still uses judgment. Recommended default. |
-| `dist/claude/hawksoft-manual/` | Restrictive | — | Activates only on explicit `/hawksoft:hawksoft-operations`. |
+| `npm run build` / `npm run build:claude` | `dist/claude/hawksoft/` | — | Strong auto-trigger; Claude auto-activates on HawkSoft requests but still uses judgment. **Recommended default.** |
+| `npm run build:claude:strict` | `dist/claude/hawksoft-always-enforce/` | ✅ `UserPromptSubmit` | Deterministic — reminds Claude to route through the skill whenever "HawkSoft" appears in a prompt. |
+| `npm run build:claude:manual` | `dist/claude/hawksoft-manual/` | — | Restrictive; activates only on explicit `/hawksoft:hawksoft-operations`. |
+| `npm run build:claude:all` | all three folders | mixed | Builds every variant at once. |
+
+Under the hood these map to `node scripts/build.mjs claude [--variant strict|manual | --all]`.
 
 - The two auto variants get a description that front-loads "HawkSoft" and widens
   the trigger surface. The manual variant tells Claude *not* to auto-activate on
@@ -180,8 +184,11 @@ which folder under `dist/claude/` to install:
   `${CLAUDE_PLUGIN_ROOT}`. On each prompt the guard reads stdin, and if the prompt
   mentions HawkSoft it returns a `UserPromptSubmit` `additionalContext` reminder;
   otherwise it stays silent.
+- Each variant folder is a clean single plugin — only `plugin.json` under
+  `.claude-plugin/` (the repo's `marketplace.json` is for the marketplace-add flow
+  and is not copied in), so a variant folder zips directly for a local plugin upload.
 
-Install exactly one variant, e.g. `claude --plugin-dir dist/claude/hawksoft-always-enforce`.
+Install exactly one variant, e.g. `claude --plugin-dir dist/claude/hawksoft`.
 
 ### ChatGPT (`scripts/translations/chatgpt.mjs`)
 
@@ -226,7 +233,7 @@ Before relying on strict enforcement, do this smoke test once:
 2. **Build and install only the strict variant:**
 
    ```bash
-   npm run build:claude
+   npm run build:claude:strict
    ```
 
    ```text

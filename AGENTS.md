@@ -98,11 +98,13 @@ relying on any procedure. Creating files by hand remains fully supported.
 
 `npm run build` (`scripts/build.mjs`) turns the single source under `skills/` into
 per-vendor deliverables, each in its own namespaced folder under `dist/`
-(gitignored): `dist/claude/` (the native plugin in three activation variants —
-`hawksoft-always-enforce` with a bundled `UserPromptSubmit` hook,
-`hawksoft-soft-trigger`, `hawksoft-manual`) and `dist/chatgpt/` (one ChatGPT Skill
-bundle per skill; ChatGPT Skills use the same `SKILL.md` format, so only the
-Claude-specific routing is adapted, and the module validates each bundle's output).
+(gitignored): `dist/claude/` (the native plugin; the default build emits only the
+recommended `hawksoft/` variant, with `npm run build:claude:strict` /
+`:manual` / `:all` for the `hawksoft-always-enforce` hook variant and
+`hawksoft-manual`) and `dist/chatgpt/` (one ChatGPT Skill bundle per skill; ChatGPT
+Skills use the same `SKILL.md` format, so only the Claude-specific routing is
+adapted, and the module validates each bundle's output). Each Claude variant folder
+carries only `plugin.json`, so it zips cleanly for a local plugin upload.
 
 Each vendor is a translation module at `scripts/translations/<id>.mjs` exporting
 `meta` and `translate(...)`, registered in `build.mjs`. Add a vendor by adding a

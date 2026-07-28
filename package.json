@@ -10,6 +10,9 @@
     "new-skill": "node scripts/skill-builder.mjs",
     "build": "node scripts/build.mjs",
     "build:claude": "node scripts/build.mjs claude",
+    "build:claude:all": "node scripts/build.mjs claude --all",
+    "build:claude:strict": "node scripts/build.mjs claude --variant strict",
+    "build:claude:manual": "node scripts/build.mjs claude --variant manual",
     "build:chatgpt": "node scripts/build.mjs chatgpt"
   },
   "private": true,

@@ -76,30 +76,31 @@ test-client data first.
 ## Choose how assertively the skill activates
 
 Different agencies want different behavior — some want Claude to *always* reach
-for the HawkSoft skill, others want it only when asked by name. Run the build to
-generate three ready-to-install variants and pick the folder that matches:
+for the HawkSoft skill, others want it only when asked by name. The default build
+produces just the **recommended** variant; the others are separate build commands.
 
 ```bash
-npm run build
+npm run build                 # default -> dist/claude/hawksoft/ (soft-trigger)
+npm run build:claude:strict   # -> dist/claude/hawksoft-always-enforce/
+npm run build:claude:manual   # -> dist/claude/hawksoft-manual/
+npm run build:claude:all      # all three at once
 ```
 
-The build writes one folder per vendor under `dist/`. The Claude variants live in
-`dist/claude/` and print which folder does what:
+| Build command | Folder | Behavior |
+| --- | --- | --- |
+| `npm run build` (default) | `dist/claude/hawksoft/` | **Recommended.** A strong description auto-activates the skill on HawkSoft requests; Claude still uses judgment. No hook. |
+| `npm run build:claude:strict` | `dist/claude/hawksoft-always-enforce/` | **Strict.** A bundled hook makes Claude route through the skill *every time* HawkSoft is mentioned. Closest to "always." |
+| `npm run build:claude:manual` | `dist/claude/hawksoft-manual/` | **Manual.** The skill activates only when you run `/hawksoft:hawksoft-operations` explicitly. |
 
-| Folder | Behavior |
-| --- | --- |
-| `dist/claude/hawksoft-always-enforce/` | **Strict.** A bundled hook makes Claude route through the skill *every time* HawkSoft is mentioned. Closest to "always." |
-| `dist/claude/hawksoft-soft-trigger/` | **Recommended default.** A strong description auto-activates the skill on HawkSoft requests; Claude still uses judgment. No hook. |
-| `dist/claude/hawksoft-manual/` | **Manual.** The skill activates only when you run `/hawksoft:hawksoft-operations` explicitly. |
-
-Install exactly one, e.g.:
+Each command produces a clean, single plugin folder (one `plugin.json`) — so it's
+also the right thing to zip for a local plugin upload. Install one, e.g.:
 
 ```powershell
-claude --plugin-dir dist\claude\hawksoft-always-enforce
+claude --plugin-dir dist\claude\hawksoft
 ```
 
-All three expose the same `/hawksoft:hawksoft-operations` command and the same
-procedures — they differ only in how eagerly the skill engages. See
+Every variant exposes the same `/hawksoft:*` commands and the same procedures —
+they differ only in how eagerly the skill engages. See
 [`docs/development.md`](docs/development.md#vendor-builds-npm-run-build) for how the
 builds work.
 
