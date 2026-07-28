@@ -11,6 +11,11 @@ always pauses for your approval before any final save.
 
 ## Install
 
+> **Agency staff / non-technical users:** follow
+> **[Install for users](docs/install-for-users.md)** — a click-by-click guide for
+> the Claude desktop app, no terminal required. The options below are for
+> developers and administrators.
+
 > **Requires a recent Claude Code.** The `--plugin-dir` flag only exists in newer
 > releases. If you see `error: unknown option '--plugin-dir'`, run
 > `claude update` (or use the marketplace option below, which works in any
@@ -119,6 +124,8 @@ Build just these with `npm run build:chatgpt`.
 
 ## Learn more
 
+- [Install for users](docs/install-for-users.md) — non-technical, click-by-click
+  install via the Claude desktop app, plus the admin org-wide rollout.
 - [Development & technical guide](docs/development.md) — repo layout, concepts,
   the interactive skill builder, the variant build, and how to add procedures.
 - [Local install and testing](docs/local-install.md) — every install option in
