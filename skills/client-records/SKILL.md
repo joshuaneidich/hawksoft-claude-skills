@@ -73,6 +73,17 @@ Read these files before proceeding:
 
 - `${CLAUDE_SKILL_DIR}/tasks/archive-a-client.md`
 
+### Create a snapshot
+
+When the user asks to:
+
+- Create a snapshot
+- Take a snapshot of the client
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/create-a-snapshot.md`
+
 <!-- skill-builder:routing -->
 
 ### Requests without a documented task

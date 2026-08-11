@@ -84,6 +84,75 @@ Read these files before proceeding:
 
 - `${CLAUDE_SKILL_DIR}/tasks/reinstate-a-policy.md`
 
+### Change policy details
+
+When the user asks to:
+
+- Change policy details
+- Edit a policy
+- Update policy information
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/change-policy-details.md`
+
+### Change policy status
+
+When the user asks to:
+
+- Change policy status
+- Update a policy status
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/change-policy-status.md`
+
+### Quote or export a policy
+
+When the user asks to:
+
+- Quote a policy
+- Export policy data
+- Start a rating
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/quote-or-export.md`
+
+### Duplicate or remarket a policy
+
+When the user asks to:
+
+- Duplicate a policy
+- Remarket a policy
+- Shop a policy to another carrier
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/duplicate-or-remarket-policy.md`
+
+### Archive a policy
+
+When the user asks to:
+
+- Archive a policy
+- Remove an old policy
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/archive-a-policy.md`
+
+### Move a policy
+
+When the user asks to:
+
+- Move a policy
+- Transfer a policy to another client
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/move-a-policy.md`
+
 <!-- skill-builder:routing -->
 
 ### Requests without a documented task

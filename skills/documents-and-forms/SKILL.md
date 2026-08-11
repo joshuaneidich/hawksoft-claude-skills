@@ -63,6 +63,29 @@ Read these files before proceeding:
 
 - `${CLAUDE_SKILL_DIR}/tasks/complete-an-acord-form.md`
 
+### Process a carrier download
+
+When the user asks to:
+
+- Process a carrier download
+- Handle a download from the carrier
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/process-a-carrier-download.md`
+
+### Carrier website inquiry
+
+When the user asks to:
+
+- Carrier website inquiry
+- Look something up on the carrier site
+- Open the carrier website
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/carrier-website-inquiry.md`
+
 <!-- skill-builder:routing -->
 
 ### Requests without a documented task

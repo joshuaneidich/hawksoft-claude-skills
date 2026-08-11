@@ -1,6 +1,6 @@
 ---
 name: hawksoft-operations
-description: Guide or perform approved HawkSoft agency-management workflows. Currently covers logging inbound customer phone calls. Use whenever the user asks how to complete, or asks Claude to perform, any operation in HawkSoft.
+description: Guide or perform approved HawkSoft agency-management workflows, especially logging client interactions (phone, walk-in, email, text, fax, mail, chat, online). Use whenever HawkSoft is mentioned, or the user asks how to complete — or asks Claude to perform — a HawkSoft operation such as logging a call or documenting a client conversation.
 ---
 
 # HawkSoft Operations
@@ -122,6 +122,62 @@ When the user asks to:
 Read these files before proceeding:
 
 - `${CLAUDE_SKILL_DIR}/tasks/log-a-fax.md`
+
+### Log a mail item
+
+When the user asks to:
+
+- Log a mail item
+- Record a letter we received or sent
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-a-mail-item.md`
+
+### Log a chat
+
+When the user asks to:
+
+- Log a chat
+- Record a chat with a customer
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-a-chat.md`
+
+### Log an online interaction
+
+When the user asks to:
+
+- Log an online interaction
+- Record an online request
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-an-online-interaction.md`
+
+### Send an email
+
+When the user asks to:
+
+- Send an email
+- Email the client from HawkSoft
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/send-an-email.md`
+
+### Log a Client Interaction
+
+When the user asks to:
+
+- Log an interaction
+- Log a call, email, or contact
+- Record a client contact
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-a-client-interaction.md`
 
 ### Requests without a documented task
 
