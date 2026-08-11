@@ -167,6 +167,18 @@ Read these files before proceeding:
 
 - `${CLAUDE_SKILL_DIR}/tasks/send-an-email.md`
 
+### Log a Client Interaction
+
+When the user asks to:
+
+- Log an interaction
+- Log a call, email, or contact
+- Record a client contact
+
+Read these files before proceeding:
+
+- `${CLAUDE_SKILL_DIR}/tasks/log-a-client-interaction.md`
+
 ### Requests without a documented task
 
 If the user asks for a HawkSoft operation that has no task file above:
