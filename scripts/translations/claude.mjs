@@ -27,10 +27,10 @@ const skillRel = 'skills/hawksoft-operations/SKILL.md';
 
 // Front-loaded, wide-trigger description for the two auto-activating variants.
 const AUTO_DESCRIPTION =
-  'HawkSoft agency-management workflows. Use whenever HawkSoft is mentioned, or ' +
-  'the user asks how to complete — or asks the assistant to perform — any HawkSoft ' +
-  'operation such as logging phone calls or documenting client conversations. ' +
-  'Currently covers logging inbound customer phone calls.';
+  'HawkSoft agency-management workflows, especially logging client interactions ' +
+  '(phone, walk-in, email, text, fax, mail, chat, online). Use whenever HawkSoft is ' +
+  'mentioned, or the user asks how to complete — or asks the assistant to perform — a ' +
+  'HawkSoft operation such as logging a call or documenting a client conversation.';
 
 const MANUAL_DESCRIPTION =
   'HawkSoft agency-management workflows (manual mode). Use only when the user ' +
