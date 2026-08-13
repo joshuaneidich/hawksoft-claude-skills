@@ -45,10 +45,15 @@ you are on — the desktop **Add Activity Tags** panel or the Agent Portal's **A
 Tags** list — read the whole tag list first (the portal's groups are collapsed; expand
 them), then match it against the facts you just wrote:
 
-- A tag the facts clearly support → apply it, and name it at the review step.
-- A tag that is arguable → leave it off and **offer** it at review with one line of
-  reasoning, so the user decides.
-- Nothing fits → say so. An untagged log beats a wrong tag.
+- Pick the one tag that fits best and apply it. Add a second only when the interaction
+  genuinely covers two distinct things — most logs need one.
+- Two candidates look close → take the more specific one rather than both, and rather
+  than stopping to ask.
+- Nothing fits → apply none. An untagged log beats a wrong tag.
+
+Do not open a separate conversation about tags. The tag you chose is staged with the
+log and goes to the user in the single review-before-saving approval, where they accept
+it or change it.
 
 Tag what happened, not what was asked for: when the list separates a request from an
 outcome (`Cancel Request` vs `Cancellation`), the same distinction applies as in

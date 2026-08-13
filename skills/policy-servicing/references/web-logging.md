@@ -120,6 +120,10 @@ they are the same three choices the desktop Action menu asks for, in the same or
 - **Entity** — who the interaction was with. If it is unclear, **stop and ask.** Do
   not assume Insured.
 
+These three are the only things worth asking about before the review: the form cannot
+be filled in without them, and guessing one writes a wrong log. Everything else — the
+tag, the wording of the note — waits for the single approval in step 8.
+
 ### 6. Add activity tags when they apply
 
 Turn the **Activity Tags** toggle on. It reveals a **checkbox list** — tick every tag
@@ -148,27 +152,33 @@ treat this as orientation, not as the authoritative set:
 > Referred To Autoshop · Refund · REINSTATED · Renewal · Repairs · Rewrite ·
 > Send E-Sign · Service Task · Source Policy ID · Verification
 
-Read what is actually on screen and tick only what is there. If the tag the user named
-is not in the list, **ask** — do not substitute a near-match, and do not report a tag as
+Read what is actually on screen and tick only what is there. Never report a tag as
 applied when it was not.
 
-**Suggest tags; do not wait to be asked.** Once the full list is visible, match it
-against the facts of the interaction and propose the tags that fit, even when the user
-named none:
+**Choose the tag yourself — do not wait to be asked, and do not hold a separate
+conversation about it.** Once the full list is visible, match it against the facts of
+the interaction and decide:
 
-- **Clearly implied by the facts** → tick it, and say which ones you ticked and why at
-  [Review before saving](#8-review-before-saving). An ID-card request is `ID Cards`; an
-  address change is `Information Update`; a billing question is `Billing`.
-- **Plausible but arguable** → leave it unticked and **offer** it at review, one line of
-  reasoning each, so the user can accept or drop it.
+- **Pick the one tag that fits best** and tick it. An ID-card request is `ID Cards`; an
+  address change is `Information Update`; a billing question is `Billing`. Add a second
+  tag only when the interaction genuinely covers two distinct things — most logs need
+  one.
+- **Two candidates look close** → tick the more specific one rather than both, and
+  rather than stopping to ask.
 - **Distinguish a request from a completed action** when the list separates them (for
   example `Cancel Request` vs `Cancellation`) — tag what actually happened, not what was
   asked for.
-- **Nothing fits** → say so at review rather than reaching for a loose match. An
-  untagged log is better than a wrong tag.
+- **Nothing fits** → tick nothing. An untagged log is better than a wrong tag.
 
-Never tick a tag the facts do not support just because it sounds related, and never
-tick an arguable one without approval.
+Your choice is staged, not committed — it goes to the user in the single approval at
+[Review before saving](#8-review-before-saving), where they accept it or change it.
+That approval is the only place tags are discussed, so do not ask about them earlier
+and do not offer a menu of alternatives. Never tick a tag the facts do not support just
+because it sounds related.
+
+If the user named a tag that is not in the list, do not substitute a near-match: tick
+what genuinely fits (or nothing) and say at review that the tag they named does not
+exist here.
 
 **Sentiment tags vs. client tags.** These are *activity* tags: they describe **this log
 entry**. A *client* tag is a flag on the **whole client**, and this form has no
@@ -195,13 +205,16 @@ Confirm:
 - Correct client (breadcrumb client number, name, and address)
 - Correct **Channel / From-To / Entity**
 - Accurate facts
-- The activity tags you ticked, and any you are **suggesting** but left unticked — name
-  both lists explicitly so the user can add or drop before the save
+- The activity tag you ticked (name it, and why) — or that you ticked none, and that a
+  tag the user named is not in this agency's list, when either applies
 - No sensitive information
 - A clear next step
 
-**Pause here.** Show the user the proposed note and the three selections, and ask for
-approval before selecting **Save New Log**.
+**Pause here — this is the only approval.** Everything above is staged, nothing is
+saved. Show the user one message containing the client, the three selections, the tag,
+and the full note, and ask them to accept or adjust. Nothing here should have been
+raised with the user earlier, and nothing needs raising after. On approval, go straight
+to the save.
 
 ### 9. Save and verify
 
@@ -216,8 +229,6 @@ Stop and report the problem when:
 - A sign-in prompt appears, or the app is unreachable.
 - **Lookup** returns nothing, or no result card can be verified.
 - **Matched On** shows the hit came from someone other than the intended party.
-- A tag the user asked for is not in the Activity Tags list, including inside its
-  collapsed groups.
 - The correct channel, direction, or entity is unclear.
 - The form's fields do not match the table above.
 - The user has not supplied enough facts to write an accurate note.
