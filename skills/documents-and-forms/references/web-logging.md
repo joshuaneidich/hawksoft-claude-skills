@@ -126,11 +126,12 @@ Turn the **Activity Tags** toggle on. It reveals a **checkbox list** — tick ev
 that accurately describes the interaction, and only those. If no tag fits, leave the
 toggle off.
 
-**Groups — expand them before deciding no tag fits.** Blue entries with a `▸` are
-collapsed groups, sitting in alphabetical order among the plain tags. Their contents are
-hidden until expanded, so a tag the user asked for may be nested one level down and
-invisible on a flat scan of the list. Expand every group that could plausibly hold it
-before concluding it is absent.
+**Expand every group first.** Blue entries with a `▸` are collapsed groups, sitting in
+alphabetical order among the plain tags, and their contents stay hidden until expanded —
+so a flat scan of the list misses whatever is nested inside them. Before choosing any
+tag, expand **all** of them so the full set is visible. Only skip a group when its name
+makes it plainly irrelevant to this interaction, and never conclude a tag is absent
+without having opened the groups that could hold it.
 
 Group names are **agency-defined**, not portal built-ins — one agency's portal showed
 `AutoShop`, `Payment Status`, and `Sentiment`, and another's will differ. Never assume a
@@ -150,6 +151,24 @@ treat this as orientation, not as the authoritative set:
 Read what is actually on screen and tick only what is there. If the tag the user named
 is not in the list, **ask** — do not substitute a near-match, and do not report a tag as
 applied when it was not.
+
+**Suggest tags; do not wait to be asked.** Once the full list is visible, match it
+against the facts of the interaction and propose the tags that fit, even when the user
+named none:
+
+- **Clearly implied by the facts** → tick it, and say which ones you ticked and why at
+  [Review before saving](#8-review-before-saving). An ID-card request is `ID Cards`; an
+  address change is `Information Update`; a billing question is `Billing`.
+- **Plausible but arguable** → leave it unticked and **offer** it at review, one line of
+  reasoning each, so the user can accept or drop it.
+- **Distinguish a request from a completed action** when the list separates them (for
+  example `Cancel Request` vs `Cancellation`) — tag what actually happened, not what was
+  asked for.
+- **Nothing fits** → say so at review rather than reaching for a loose match. An
+  untagged log is better than a wrong tag.
+
+Never tick a tag the facts do not support just because it sounds related, and never
+tick an arguable one without approval.
 
 **Sentiment tags vs. client tags.** These are *activity* tags: they describe **this log
 entry**. A *client* tag is a flag on the **whole client**, and this form has no
@@ -176,7 +195,8 @@ Confirm:
 - Correct client (breadcrumb client number, name, and address)
 - Correct **Channel / From-To / Entity**
 - Accurate facts
-- Appropriate activity tags
+- The activity tags you ticked, and any you are **suggesting** but left unticked — name
+  both lists explicitly so the user can add or drop before the save
 - No sensitive information
 - A clear next step
 

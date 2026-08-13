@@ -38,6 +38,25 @@ Suggested activity tag:
 
 - Information Update
 
+## Proposing activity tags
+
+Tagging is part of writing the log, not a favor granted on request. Whichever surface
+you are on — the desktop **Add Activity Tags** panel or the Agent Portal's **Activity
+Tags** list — read the whole tag list first (the portal's groups are collapsed; expand
+them), then match it against the facts you just wrote:
+
+- A tag the facts clearly support → apply it, and name it at the review step.
+- A tag that is arguable → leave it off and **offer** it at review with one line of
+  reasoning, so the user decides.
+- Nothing fits → say so. An untagged log beats a wrong tag.
+
+Tag what happened, not what was asked for: when the list separates a request from an
+outcome (`Cancel Request` vs `Cancellation`), the same distinction applies as in
+[Do not claim completion prematurely](#do-not-claim-completion-prematurely).
+
+The tag list is agency-configurable, so never invent a tag that is not on screen and
+never report one as applied when it was not.
+
 ## Style requirements
 
 Use:
