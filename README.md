@@ -77,9 +77,10 @@ test-client data first.
 
 Logging runs on whichever surface is faster:
 
-- **HawkSoft web app (`agents.hawksoft.app`) — preferred.** The **New Log** form takes
-  the whole entry on one screen (Channel, From/To, Entity, Activity Tags, User Note),
-  so Claude fills it in directly instead of walking the desktop Action menu.
+- **HawkSoft Agent Portal (`agents.hawksoft.app`) — preferred.** Claude searches for the
+  client, verifies the result card, opens **New Log**, and fills the whole entry on one
+  screen (Channel, From/To, Entity, Activity Tags, User Note) instead of walking the
+  desktop Action menu.
 - **HawkSoft desktop — the fallback**, used automatically when the web app is not open
   or signed in, and whenever the log needs something the New Log form does not have: a
   **client tag**, a **follow-up task**, or a **policy association**.

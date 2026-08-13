@@ -47,9 +47,10 @@ In execution mode:
 
 Logs can be written in two places, and the faster one is preferred:
 
-- **HawkSoft web app (`agents.hawksoft.app`) — preferred for logging.** Its **New Log**
-  form captures the whole entry on one screen (Channel, From/To, Entity, Activity Tags,
-  User Note) instead of walking the desktop Action menu.
+- **HawkSoft Agent Portal (`agents.hawksoft.app`) — preferred for logging.** Search →
+  Select the client → **New Log +**, and the whole entry is one screen (Channel,
+  From/To, Entity, Activity Tags, User Note) instead of a walk through the desktop
+  Action menu.
 - **HawkSoft desktop Action menu — the fallback**, and the only route for anything the
   New Log form does not offer: a client tag, a follow-up task/suspense, or a specific
   policy association.
