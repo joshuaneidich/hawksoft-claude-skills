@@ -21,6 +21,23 @@ Before beginning, obtain:
 
 If the user has not provided enough information, ask for the missing details before starting.
 
+## Before you start — choose the surface
+
+Logging is faster in the HawkSoft web app, so it is the preferred route. Follow
+`../references/web-logging.md`:
+
+**Decision — is the web app (`agents.hawksoft.app`) available and signed in?**
+
+- **Yes, and this is a plain log** → log it there. In **New Log**, this task's path
+  becomes **Channel** = Email, **Entity** = Insured, **From/To** = From for email the
+  agency received, To for email the agency sent. Follow `../references/web-logging.md`
+  to the end — including the pause before **Save New Log** — and skip the desktop
+  steps below.
+- **Yes, but the request also needs a client tag, a follow-up task, or a specific
+  policy association** → the New Log form has none of those. Use the desktop steps
+  below.
+- **No / not signed in / unsure** → use the desktop steps below.
+
 ## Procedure
 
 ### 1. Open and verify the correct client

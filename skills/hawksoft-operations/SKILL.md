@@ -1,6 +1,6 @@
 ---
 name: hawksoft-operations
-description: Guide or perform approved HawkSoft agency-management workflows, especially logging client interactions (phone, walk-in, email, text, fax, mail, chat, online). Use whenever HawkSoft is mentioned, or the user asks how to complete — or asks Claude to perform — a HawkSoft operation such as logging a call or documenting a client conversation.
+description: Guide or perform approved HawkSoft agency-management workflows, especially logging client interactions (phone, walk-in, email, text, fax, mail, chat, online) — in the HawkSoft web app (agents.hawksoft.app) when it is available, otherwise the desktop Action menu. Use whenever HawkSoft is mentioned, or the user asks how to complete — or asks Claude to perform — a HawkSoft operation such as logging a call or documenting a client conversation.
 ---
 
 # HawkSoft Operations
@@ -27,8 +27,9 @@ In guidance mode:
 Use execution mode when:
 
 - The user asks Claude to perform the task.
-- Computer use is available.
-- HawkSoft is open or can be opened.
+- Computer use (or browser use, for the web app) is available.
+- HawkSoft is open or can be opened — the desktop client, or the web app at
+  `agents.hawksoft.app` for logging.
 - The user has provided enough information to perform the task safely.
 
 In execution mode:
@@ -42,7 +43,33 @@ In execution mode:
 7. Present the proposed entry to the user for approval.
 8. After saving, verify that the entry appears in HawkSoft.
 
+## Choose the surface for logging tasks
+
+Logs can be written in two places, and the faster one is preferred:
+
+- **HawkSoft web app (`agents.hawksoft.app`) — preferred for logging.** Its **New Log**
+  form captures the whole entry on one screen (Channel, From/To, Entity, Activity Tags,
+  User Note) instead of walking the desktop Action menu.
+- **HawkSoft desktop Action menu — the fallback**, and the only route for anything the
+  New Log form does not offer: a client tag, a follow-up task/suspense, or a specific
+  policy association.
+
+Before performing any logging task, read:
+
+- `${CLAUDE_SKILL_DIR}/references/web-logging.md`
+
+Then follow the surface decision at the top of the task file. Every safety rule is
+unchanged on the web: verify the client, never invent facts, and pause for approval
+before **Save New Log**. If the web app is unreachable, prompts for sign-in, or does
+not match the documented form, say so and use the desktop steps — never enter
+credentials, and never improvise a path through an unfamiliar screen.
+
+Non-logging tasks are desktop procedures; there is no approved web equivalent for them.
+
 ## Task routing
+
+Every logging task below also reads `${CLAUDE_SKILL_DIR}/references/web-logging.md`
+before it starts.
 
 ### Log an inbound phone call from a customer
 
@@ -57,6 +84,7 @@ When the user asks to:
 Read these files before proceeding:
 
 - `${CLAUDE_SKILL_DIR}/tasks/log-inbound-phone-call.md`
+- `${CLAUDE_SKILL_DIR}/references/web-logging.md`
 - `${CLAUDE_SKILL_DIR}/references/phone-log-standards.md`
 - `${CLAUDE_SKILL_DIR}/references/navigation.md`
 - `${CLAUDE_SKILL_DIR}/references/safety.md`
@@ -189,9 +217,10 @@ If the user asks for a HawkSoft operation that has no task file above:
 
 ## Client verification
 
-Before writing anything to HawkSoft:
+Before writing anything to HawkSoft — desktop or web:
 
-1. Confirm that the correct client record is open.
+1. Confirm that the correct client record is open. In the web app, read the breadcrumb
+   (`Home / Client <number> / New Log`) and the client header on the page.
 2. Read the visible client name.
 3. Verify at least one additional identifier when available, such as:
    - Address
@@ -227,6 +256,7 @@ Do not include:
 During development and testing, do not select a final button such as:
 
 - Save Log
+- Save New Log (web app)
 - Save
 - Finish
 - Submit

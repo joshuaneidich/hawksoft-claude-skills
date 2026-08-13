@@ -18,7 +18,7 @@ The content should be useful in two layers:
 - Keep Claude-specific install and namespace details in plugin metadata and user-facing README instructions.
 - Do not put private customer, policy, claim, payment, or protected personal information in repository examples.
 - Use fabricated test data in docs and examples.
-- Preserve the final-save guardrail: agents must pause for user approval before clicking or instructing a final action such as `Save Log`, `Save`, `Submit`, `Bind`, `Cancel Policy`, or `Delete`.
+- Preserve the final-save guardrail: agents must pause for user approval before clicking or instructing a final action such as `Save Log`, `Save New Log` (web app), `Save`, `Submit`, `Bind`, `Cancel Policy`, or `Delete`.
 
 ## Skill and workflow terminology
 
@@ -47,6 +47,28 @@ bundled independently for non-Claude vendors, a shared reference must exist insi
 each skill that links to it: the canonical copy lives in `shared/references/`, and
 `npm run sync:shared` copies it into every `skills/<skill>/references/`. Edit the
 canonical copy, then run the sync; `npm test` fails if any skill's copy has drifted.
+
+## Two surfaces: web app and desktop
+
+HawkSoft work happens on two surfaces, and tasks must say which one they use:
+
+- **Web app (`agents.hawksoft.app`) — preferred for logging.** Its **New Log** form
+  captures a whole log on one screen (Channel, From/To, Entity, Activity Tags, User
+  Note, Save New Log). `shared/references/web-logging.md` is the single place that
+  documents it — a shared reference, so `npm run sync:shared` copies it into every
+  skill and any skill's logging task can link `../references/web-logging.md`. Tasks
+  link it from a "Before you start — choose the surface" decision block instead of
+  restating the procedure.
+- **Desktop Action menu — the fallback**, and the only documented route for a client
+  tag, a follow-up task/suspense, a policy association, and every non-logging
+  procedure.
+
+When editing a logging task, keep both surfaces in sync: the web mapping in its
+decision block (`Channel` / `From/To` / `Entity`) must match the desktop path
+(`Method → Direction → Party`) in the same file. Do not document a web screen that has
+not been seen — the never-guess rule applies to the web app exactly as it does to the
+desktop client, and the assistant must stop rather than improvise when the page does
+not match.
 
 Optional steps should be **self-triggering from the request.** When a task has an
 optional action (adding a tag, creating a follow-up task), document how to detect it

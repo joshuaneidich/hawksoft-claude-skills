@@ -73,6 +73,21 @@ Claude verifies the client, follows the documented path, proposes the note, and
 **pauses before any final Save** until you approve. Always test on fabricated or
 test-client data first.
 
+### Where logs get written
+
+Logging runs on whichever surface is faster:
+
+- **HawkSoft web app (`agents.hawksoft.app`) — preferred.** The **New Log** form takes
+  the whole entry on one screen (Channel, From/To, Entity, Activity Tags, User Note),
+  so Claude fills it in directly instead of walking the desktop Action menu.
+- **HawkSoft desktop — the fallback**, used automatically when the web app is not open
+  or signed in, and whenever the log needs something the New Log form does not have: a
+  **client tag**, a **follow-up task**, or a **policy association**.
+
+Either way Claude verifies the client first and pauses before **Save New Log** /
+**Save Log**. It will never enter your credentials — if a sign-in screen appears, it
+stops and tells you.
+
 ## Choose how assertively the skill activates
 
 Different agencies want different behavior — some want Claude to *always* reach

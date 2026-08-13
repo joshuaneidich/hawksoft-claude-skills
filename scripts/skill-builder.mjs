@@ -216,6 +216,50 @@ explain that the screenshot should be added later.
   return block;
 }
 
+// Logging is faster in the HawkSoft web app, so every logging task opens with the
+// surface decision documented in shared/references/web-logging.md. A task is a
+// logging task when its screen path ends in "Log"; the web mapping is derived from
+// the same path, so the two surfaces cannot drift apart in a generated file.
+function buildSurfaceBlock(screenPath) {
+  const parts = String(screenPath || '')
+    .split(/→|->|>|\|/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length < 2 || parts[parts.length - 1].toLowerCase() !== 'log') return '';
+
+  const middle = parts.slice(1, -1).filter((part) => !/^action$/i.test(part));
+  let mapping;
+  if (middle.length >= 3) {
+    mapping = `**Channel** = ${middle[0]}, **From/To** = ${middle[1]}, **Entity** = ${middle[2]}`;
+  } else if (middle.length === 2) {
+    mapping =
+      `**Channel** = ${middle[0]}, **Entity** = ${middle[1]}, with **From/To** matching ` +
+      `the direction of the interaction`;
+  } else if (middle.length === 1) {
+    mapping =
+      `**Channel** = ${middle[0]}, with **From/To** and **Entity** matching the ` +
+      `direction and party of the interaction`;
+  } else {
+    mapping = '**Channel**, **From/To**, and **Entity** set to match the interaction';
+  }
+
+  return (
+    `\n## Before you start — choose the surface\n\n` +
+    `Logging is faster in the HawkSoft web app, so it is the preferred route. Follow\n` +
+    '`../references/web-logging.md`:\n\n' +
+    '**Decision — is the web app (`agents.hawksoft.app`) available and signed in?**\n\n' +
+    `- **Yes, and this is a plain log** → log it there. In **New Log**, this task's path\n` +
+    `  becomes ${mapping}. Follow \`../references/web-logging.md\`\n` +
+    `  to the end — including the pause before **Save New Log** — and skip the desktop\n` +
+    `  steps below.\n` +
+    `- **Yes, but the request also needs a client tag, a follow-up task, or a specific\n` +
+    `  policy association** → the New Log form has none of those. Use the desktop steps\n` +
+    `  below.\n` +
+    `- **No / not signed in / unsure** → use the desktop steps below.\n`
+  );
+}
+
 function buildTaskMd({
   taskTitle,
   purpose,
@@ -237,6 +281,8 @@ function buildTaskMd({
       .map((item) => `- ${item}`)
       .join('\n')}\n\nIf the user has not provided enough information, ask for the missing details before starting.\n`;
   }
+
+  md += buildSurfaceBlock(screenPath);
 
   md += `\n## Procedure\n`;
 

@@ -123,6 +123,27 @@ The builder only *scaffolds* — review the wording and capture the referenced
 screenshots before relying on the procedure. It refuses to overwrite an existing
 skill or task file. Creating files by hand (below) is fully supported too.
 
+## The two surfaces (web app and desktop)
+
+Logging has two possible surfaces, and the split is documented in exactly one place:
+`shared/references/web-logging.md` (a [shared reference](#shared-references-sharedreferences),
+copied into every skill as `references/web-logging.md`).
+
+- The **HawkSoft web app** (`agents.hawksoft.app`) **New Log** form is the preferred
+  route for logging — one screen (Channel, From/To, Entity, Activity Tags, User Note,
+  Save New Log) instead of the desktop `Action → Method → Direction → Party → Log`
+  walk. Its fields map 1:1 onto the desktop choices, so a task's web mapping and its
+  desktop path must always agree.
+- The **desktop Action menu** stays the fallback and the only documented route for a
+  client tag, a follow-up task/suspense, a policy association, or any non-logging
+  procedure.
+
+Each logging task opens with a **"Before you start — choose the surface"** decision
+block that names its web mapping and links the reference. When you add a logging task,
+copy that block and fill in its `Channel` / `From/To` / `Entity` values; when you
+change a task's desktop path, update the mapping in the same edit. Screenshots of the
+web form live in `skills/hawksoft-operations/screenshots/web-log/`.
+
 ## Shared references (`shared/references/`)
 
 Some references apply to every skill — most notably the branchy "find and open a
