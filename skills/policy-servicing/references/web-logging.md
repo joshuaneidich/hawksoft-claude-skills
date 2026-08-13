@@ -126,12 +126,18 @@ Turn the **Activity Tags** toggle on. It reveals a **checkbox list** — tick ev
 that accurately describes the interaction, and only those. If no tag fits, leave the
 toggle off.
 
-**Groups.** Blue entries with a `▸` are collapsed groups, sitting in alphabetical order
-among the plain tags; expand one to reach the tags inside. Observed groups: **AutoShop**,
-**Payment Status**, **Sentiment**.
+**Groups — expand them before deciding no tag fits.** Blue entries with a `▸` are
+collapsed groups, sitting in alphabetical order among the plain tags. Their contents are
+hidden until expanded, so a tag the user asked for may be nested one level down and
+invisible on a flat scan of the list. Expand every group that could plausibly hold it
+before concluding it is absent.
 
-**The list is agency-configurable — organizations add their own tags**, so treat this
-as orientation, not as the authoritative set:
+Group names are **agency-defined**, not portal built-ins — one agency's portal showed
+`AutoShop`, `Payment Status`, and `Sentiment`, and another's will differ. Never assume a
+group exists, and never assume it does not; read the list on screen.
+
+**The list is agency-configurable — organizations add their own tags and groups**, so
+treat this as orientation, not as the authoritative set:
 
 > AOR · Billing · Bind/Bound · Cancel Request · Cancellation · Citizens Depopulation ·
 > Claim · Coverage · Declaration Page · Documents Request · Endorsement · ID Cards ·
@@ -150,7 +156,8 @@ entry**. A *client* tag is a flag on the **whole client**, and this form has no
 client-tag control. So when the user says something like "tag them as upset":
 
 - **They want the client flagged** → that is a client tag → use the desktop steps.
-- **They want this interaction marked** → a tag from the **Sentiment** group may fit.
+- **They want this interaction marked** → a sentiment-style group may exist (this
+  agency added one named **Sentiment**); expand it and use a tag that genuinely fits.
 - **Unclear which** → **ask.** A Sentiment tag on one log is not equivalent to a
   client-level flag, and choosing the wrong one silently is worse than asking.
 
@@ -189,7 +196,8 @@ Stop and report the problem when:
 - A sign-in prompt appears, or the app is unreachable.
 - **Lookup** returns nothing, or no result card can be verified.
 - **Matched On** shows the hit came from someone other than the intended party.
-- A tag the user asked for is not in the Activity Tags list.
+- A tag the user asked for is not in the Activity Tags list, including inside its
+  collapsed groups.
 - The correct channel, direction, or entity is unclear.
 - The form's fields do not match the table above.
 - The user has not supplied enough facts to write an accurate note.
