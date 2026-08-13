@@ -34,7 +34,7 @@ final-save rule, exactly like `Save Log` on the desktop.
 | **Channel** | Starting Method | Phone, Mail, Walkin, Chat, Fax, Email, Text, Online, Download |
 | **From/To** | Direction | `From` = the party contacted the agency (inbound); `To` = the agency reached out (outbound) |
 | **Entity** | Party | Insured, Carrier, Lien Holder, Escrow, Claimant, Law Enforcement, Certificate Holder, Mortgagee, Other |
-| **Activity Tags** (toggle) | Add Activity Tags panel | Off by default; turn it on only when tags apply |
+| **Activity Tags** (toggle) | Add Activity Tags panel | Off by default; on, it reveals a multi-select checkbox list with expandable groups |
 | **User Note** | The Create Log note editor | Same note standards as a desktop log |
 | **Save New Log** | Save Log | **Final action.** Requires user approval first |
 
@@ -122,13 +122,37 @@ they are the same three choices the desktop Action menu asks for, in the same or
 
 ### 6. Add activity tags when they apply
 
-Turn the **Activity Tags** toggle on and select the tags that accurately describe the
-interaction. Add only tags that fit — do not add unrelated tags. If no tag fits, leave
-the toggle off.
+Turn the **Activity Tags** toggle on. It reveals a **checkbox list** — tick every tag
+that accurately describes the interaction, and only those. If no tag fits, leave the
+toggle off.
 
-These are *activity* tags, describing this log entry. A *client* tag — a flag on the
-whole client, such as "upset" — is not available on this form; that log belongs on the
-desktop.
+**Groups.** Blue entries with a `▸` are collapsed groups, sitting in alphabetical order
+among the plain tags; expand one to reach the tags inside. Observed groups: **AutoShop**,
+**Payment Status**, **Sentiment**.
+
+**The list is agency-configurable — organizations add their own tags**, so treat this
+as orientation, not as the authoritative set:
+
+> AOR · Billing · Bind/Bound · Cancel Request · Cancellation · Citizens Depopulation ·
+> Claim · Coverage · Declaration Page · Documents Request · Endorsement · ID Cards ·
+> Information Update · Inspection · Info Verification · Lenders · Missing Information ·
+> Mortgage Clause · New Business Forms · Non-Renewals · Payments · Policy Change ·
+> Policy Review · Policy Status · Proof of Coverage · Quote/Proposal · Referral ·
+> Referred To Autoshop · Refund · REINSTATED · Renewal · Repairs · Rewrite ·
+> Send E-Sign · Service Task · Source Policy ID · Verification
+
+Read what is actually on screen and tick only what is there. If the tag the user named
+is not in the list, **ask** — do not substitute a near-match, and do not report a tag as
+applied when it was not.
+
+**Sentiment tags vs. client tags.** These are *activity* tags: they describe **this log
+entry**. A *client* tag is a flag on the **whole client**, and this form has no
+client-tag control. So when the user says something like "tag them as upset":
+
+- **They want the client flagged** → that is a client tag → use the desktop steps.
+- **They want this interaction marked** → a tag from the **Sentiment** group may fit.
+- **Unclear which** → **ask.** A Sentiment tag on one log is not equivalent to a
+  client-level flag, and choosing the wrong one silently is worse than asking.
 
 ### 7. Write the User Note
 
@@ -165,6 +189,7 @@ Stop and report the problem when:
 - A sign-in prompt appears, or the app is unreachable.
 - **Lookup** returns nothing, or no result card can be verified.
 - **Matched On** shows the hit came from someone other than the intended party.
+- A tag the user asked for is not in the Activity Tags list.
 - The correct channel, direction, or entity is unclear.
 - The form's fields do not match the table above.
 - The user has not supplied enough facts to write an accurate note.
