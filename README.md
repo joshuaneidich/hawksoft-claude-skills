@@ -1,5 +1,8 @@
 # HawkSoft Claude Skills
 
+[![CI](https://github.com/joshuaneidich/hawksoft-claude-skills/actions/workflows/ci.yml/badge.svg)](https://github.com/joshuaneidich/hawksoft-claude-skills/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A Claude Code plugin that teaches an AI assistant to guide, draft, or perform
 approved HawkSoft agency-management procedures — logging phone notes, documenting
 client conversations, and similar workflows. It follows agency-approved steps and
@@ -40,11 +43,21 @@ To remove it later: `/plugin uninstall hawksoft@hawksoft-claude-skills` and
 
 ## Verify it loaded
 
-Run `/help`. You should see the command:
+Run `/help`. Each skill is namespaced by the plugin, so you should see all six
+commands:
 
 ```text
-/hawksoft:hawksoft-operations
+/hawksoft:hawksoft-operations     logging and documenting client interactions
+/hawksoft:policy-servicing        insert, endorse, cancel, renew, reinstate a policy
+/hawksoft:claims                  file a claim, proof of claim, claim status
+/hawksoft:client-records          change, duplicate, merge, archive a client
+/hawksoft:documents-and-forms     scan/attach, print/create, ACORD forms, downloads
+/hawksoft:billing-and-accounting  payments, invoices, trust accounting
 ```
+
+You do not have to type a command — Claude reaches for the matching skill on its
+own when you describe a HawkSoft task. The commands are the explicit route when you
+want a specific one.
 
 ## Using the skill
 
@@ -139,6 +152,12 @@ Build just these with `npm run build:chatgpt`.
 - Sensitive data (full SSNs, full card numbers, passwords) is kept out of notes.
 - Test only with fabricated or test-client data until a workflow is proven.
 
+## License
+
+MIT — see [`LICENSE`](LICENSE). You are free to install, fork, and adapt these
+procedures for your own agency. The HawkSoft steps documented here reflect one
+agency's approved practice; verify them against your own before relying on them.
+
 ## Learn more
 
 - [Install for users](docs/install-for-users.md) — non-technical, click-by-click
@@ -147,4 +166,6 @@ Build just these with `npm run build:chatgpt`.
   the interactive skill builder, the variant build, and how to add procedures.
 - [Local install and testing](docs/local-install.md) — every install option in
   detail.
+- [Screenshot capture checklist](docs/screenshots.md) — which HawkSoft screens are
+  still missing a capture, and how to add one.
 - [`AGENTS.md`](AGENTS.md) — source of truth for AI agents editing this repo.

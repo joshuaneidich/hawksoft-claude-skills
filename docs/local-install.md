@@ -39,8 +39,13 @@ To remove it later:
 
 ## Verifying the install
 
-Either way, `/help` should expose:
+Either way, `/help` should expose one command per skill:
 
 ```text
 /hawksoft:hawksoft-operations
+/hawksoft:policy-servicing
+/hawksoft:claims
+/hawksoft:client-records
+/hawksoft:documents-and-forms
+/hawksoft:billing-and-accounting
 ```

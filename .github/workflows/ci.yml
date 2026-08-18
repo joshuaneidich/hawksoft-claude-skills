@@ -1,0 +1,36 @@
+name: CI
+
+# Installs from this repo track the default branch directly, so anything merged
+# here is live for every installed user immediately. Run the full validation
+# suite on every push and pull request.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate plugin and skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # The repo has no runtime dependencies today; `npm ci` keeps working if
+      # that changes.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate JSON, skills, and shared references
+        run: npm test
+
+      - name: Build every vendor bundle
+        run: npm run build -- --all

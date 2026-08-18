@@ -199,17 +199,16 @@ ${readFiles.map((f) => `- ${f}`).join('\n')}
 `;
 
   if (screenshots.length) {
+    // Do not list individual screenshot paths here: they are planned, not
+    // captured, and a ${CLAUDE_SKILL_DIR} route to a missing file fails `npm test`.
+    // The task file marks each planned shot inline instead.
     block += `
-Use these screenshots when the visible interface needs clarification:
-
-${screenshots
-      .map(
-        (s) => `- \`\${CLAUDE_SKILL_DIR}/screenshots/${s.workflow}/${s.file}\``
-      )
-      .join('\n')}
-
-If a screenshot file is unavailable, continue with the written procedure and
-explain that the screenshot should be added later.
+Screenshots for this workflow live in
+\`\${CLAUDE_SKILL_DIR}/screenshots/${screenshots[0].workflow}/\` and are embedded at the
+step they illustrate inside the task file. Where a step carries a
+\`screenshot-pending\` comment marker instead of an image, the capture has not been
+taken yet: continue with the written procedure and say that the screenshot is still
+to be added.
 `;
   }
 
@@ -291,7 +290,7 @@ function buildTaskMd({
     if (step.detail) md += `\n${step.detail}\n`;
     const shots = screenshots.filter((s) => Number(s.step) === index + 1);
     for (const shot of shots) {
-      md += `\n![${shot.caption || step.title}](../screenshots/${shot.workflow}/${shot.file})\n`;
+      md += `\n${screenshotMarker(shot, shot.caption || step.title)}\n`;
     }
   });
 
@@ -311,11 +310,18 @@ function buildTaskMd({
   );
   if (looseShots.length) {
     md += `\n## Reference screenshots\n\n${looseShots
-      .map((s) => `![${s.caption || 'Screenshot'}](../screenshots/${s.workflow}/${s.file})`)
+      .map((s) => screenshotMarker(s, s.caption || 'Screenshot'))
       .join('\n\n')}\n`;
   }
 
   return md;
+}
+
+// Scaffolded screenshots are planned, not captured. Emit the pending marker the
+// validator understands rather than a broken ![](...) embed; whoever takes the
+// screenshot swaps the marker for a real embed and `npm test` confirms the swap.
+function screenshotMarker(shot, caption) {
+  return `<!-- screenshot-pending: ../screenshots/${shot.workflow}/${shot.file} — ${caption} -->`;
 }
 
 function normalizeScreenshotFile(name, index) {

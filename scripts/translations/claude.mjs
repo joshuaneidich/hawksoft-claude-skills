@@ -25,19 +25,15 @@ export const meta = {
 
 const skillRel = 'skills/hawksoft-operations/SKILL.md';
 
-// Front-loaded, wide-trigger description for the two auto-activating variants.
-const AUTO_DESCRIPTION =
-  'HawkSoft agency-management workflows, especially logging client interactions ' +
-  '(phone, walk-in, email, text, fax, mail, chat, online) — in the HawkSoft web app ' +
-  '(agents.hawksoft.app) when it is available, otherwise the desktop Action menu. Use ' +
-  'whenever HawkSoft is mentioned, or the user asks how to complete — or asks the ' +
-  'assistant to perform — a HawkSoft operation such as logging a call or documenting a ' +
-  'client conversation.';
-
+// The auto-activating variants ship the source description verbatim (`description:
+// null` below). Restating it here once meant the build could silently re-broaden a
+// description that was deliberately narrowed in SKILL.md — skills/ stays the single
+// source of truth for triggering, and only the manual variant overrides it.
 const MANUAL_DESCRIPTION =
-  'HawkSoft agency-management workflows (manual mode). Use only when the user ' +
-  'explicitly invokes /hawksoft:hawksoft-operations or asks by name for a documented ' +
-  'HawkSoft procedure. Do not auto-activate on incidental mentions of HawkSoft.';
+  'HawkSoft interaction logging and documentation (manual mode). Use only when the ' +
+  'user explicitly invokes /hawksoft:hawksoft-operations or asks by name for a ' +
+  'documented HawkSoft procedure. Do not auto-activate on incidental mentions of ' +
+  'HawkSoft.';
 
 // Each variant carries a short `key` (for --variant), a `folder` (its dist path),
 // and whether it is the default single build.
@@ -49,7 +45,7 @@ const variants = [
     blurb:
       'A strong description auto-activates the skill on HawkSoft requests, but the ' +
       'assistant still decides. No hook, no extra setup.',
-    description: AUTO_DESCRIPTION,
+    description: null,
     hook: false,
     default: true
   },
@@ -60,7 +56,7 @@ const variants = [
     blurb:
       'A bundled hook reminds the assistant to route through the skill every time ' +
       'HawkSoft is mentioned. Deterministic — closest to "always."',
-    description: AUTO_DESCRIPTION,
+    description: null,
     hook: true
   },
   {
@@ -112,7 +108,7 @@ function addHook(variantDir, guardScriptPath) {
 
   const hooksJson = {
     description:
-      'Remind the assistant to use the hawksoft-operations skill whenever HawkSoft is mentioned.',
+      'Remind the assistant to route through the matching HawkSoft skill whenever HawkSoft is mentioned.',
     hooks: {
       UserPromptSubmit: [
         {
@@ -169,7 +165,7 @@ export function translate({ repoRoot, outDir, options = {} }) {
       join(variantDir, '.claude-plugin', 'plugin.json')
     );
     cpSync(join(repoRoot, 'skills'), join(variantDir, 'skills'), { recursive: true });
-    setDescription(join(variantDir, skillRel), v.description);
+    if (v.description) setDescription(join(variantDir, skillRel), v.description);
     if (v.hook) addHook(variantDir, guardScript);
 
     summary.push(`${v.folder}  —  ${v.label}`);

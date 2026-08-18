@@ -43,11 +43,14 @@ In the message box, type a forward slash and the word `hawksoft`:
 /hawksoft
 ```
 
-You should see the HawkSoft commands appear, such as:
+You should see all six HawkSoft commands appear:
 
-- `/hawksoft:hawksoft-operations`
-- `/hawksoft:claims`
-- `/hawksoft:policy-servicing`
+- `/hawksoft:hawksoft-operations` — logging and documenting client interactions
+- `/hawksoft:policy-servicing` — policy changes
+- `/hawksoft:claims` — claims
+- `/hawksoft:client-records` — client record edits
+- `/hawksoft:documents-and-forms` — documents and ACORD forms
+- `/hawksoft:billing-and-accounting` — payments, invoices, trust accounting
 
 If they appear, you're done. You can start by asking, for example, *"help me log an
 inbound phone call from an insured."*

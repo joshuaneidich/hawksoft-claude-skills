@@ -27,6 +27,15 @@ The content should be useful in two layers:
 - A reference file contains standards, templates, examples, terminology, or policy guidance used by one or more tasks.
 - A screenshot is visual context for a task. It should illustrate HawkSoft screens, not the code editor.
 
+Never embed a screenshot that has not been captured. `npm test` fails on any image
+whose file is missing, because a broken embed ships broken visual guidance into the
+execution path. For a planned-but-uncaptured shot, mark the step with a
+`screenshot-pending` HTML comment naming the path and the caption — see
+`docs/screenshots.md` for the exact form, the outstanding list, and the swap-back
+rule the validator enforces once the file exists. The written procedure must stand
+on its own either way; a screenshot clarifies a step, it is never the only source of
+one.
+
 ## Authoring branching logic in tasks
 
 Task files are prose, so express conditional flow as explicit decision blocks:
@@ -89,10 +98,15 @@ claude --plugin-dir .
 
 This flag requires a recent Claude Code release; see `docs/local-install.md` for troubleshooting and the marketplace-based install alternative.
 
-The current skill command is:
+Each skill is namespaced by the plugin name, so the current commands are:
 
 ```text
 /hawksoft:hawksoft-operations
+/hawksoft:policy-servicing
+/hawksoft:claims
+/hawksoft:client-records
+/hawksoft:documents-and-forms
+/hawksoft:billing-and-accounting
 ```
 
 ## Scaffolding new skills and tasks
@@ -141,6 +155,22 @@ User-facing usage lives in `README.md`. Contributor and technical documentation
 in `docs/development.md`. Keep this file (`AGENTS.md`) as the agent source of
 truth.
 
+## Skill boundaries
+
+Each skill owns one HawkSoft category and its description must claim only that
+category. `hawksoft-operations` owns **logging and documenting client
+interactions**; policy changes, claims, client-record edits, documents/ACORD forms,
+and payments belong to `policy-servicing`, `claims`, `client-records`,
+`documents-and-forms`, and `billing-and-accounting`. A description that claims the
+whole product ("use whenever HawkSoft is mentioned") wins requests that belong to a
+sibling, so keep the verbs disjoint and keep the hand-off table in
+`skills/hawksoft-operations/SKILL.md` current when a skill is added.
+
+`skills/` is the single source of truth for triggering. The Claude build overrides a
+skill description only for the `manual` variant; the auto-activating variants ship
+the source description verbatim, so a narrowing done in `SKILL.md` cannot be
+silently undone by the build.
+
 ## Validation
 
 Before committing changes, run:
@@ -149,4 +179,13 @@ Before committing changes, run:
 npm test
 ```
 
-This validates plugin JSON and the required skill frontmatter/content.
+It checks plugin metadata (required manifest fields, semver, `package.json` /
+`plugin.json` / marketplace-entry agreement, a `LICENSE` on disk), every skill
+(frontmatter present, `name` matching the directory, every `${CLAUDE_SKILL_DIR}`
+route and every local link and image target resolving, screenshot-pending markers
+well-formed), and that no skill's shared-reference copy has drifted.
+
+The same suite runs in CI on every push and pull request
+(`.github/workflows/ci.yml`), together with `npm run build -- --all`. Installs track
+the default branch directly, so anything merged is live for installed users
+immediately — do not merge on red.
