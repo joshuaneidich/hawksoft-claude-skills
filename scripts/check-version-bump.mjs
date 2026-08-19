@@ -107,9 +107,13 @@ if (!previous || !next) {
 }
 
 if (!isGreater(next, previous)) {
+  const state =
+    headManifest.version === baseManifest.version
+      ? `but ${MANIFEST} is still ${headManifest.version}`
+      : `but ${MANIFEST} went backwards, ${baseManifest.version} -> ${headManifest.version}`;
   console.error(
     `\n${payloadChanges.length} shipped plugin file(s) changed since ${base.slice(0, 8)}, ` +
-      `but ${MANIFEST} is still ${headManifest.version}:\n`
+      `${state}:\n`
   );
   for (const file of payloadChanges) console.error(`  - ${file}`);
   console.error(
