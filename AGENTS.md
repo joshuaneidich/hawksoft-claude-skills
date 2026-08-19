@@ -19,6 +19,48 @@ The content should be useful in two layers:
 - Do not put private customer, policy, claim, payment, or protected personal information in repository examples.
 - Use fabricated test data in docs and examples.
 - Preserve the final-save guardrail: agents must pause for user approval before clicking or instructing a final action such as `Save Log`, `Save New Log` (web app), `Save`, `Submit`, `Bind`, `Cancel Policy`, or `Delete`.
+- **Bump the plugin version in the same commit as any change that ships.** See [Versioning](#versioning) — this one is enforced by CI, not left to memory.
+
+## Versioning
+
+`/plugin marketplace add` follows the default branch, so every merge is a release
+whether or not anyone calls it one. The version in `.claude-plugin/plugin.json` is
+therefore the only handle on what an installed agency is actually running — if two
+commits ship different procedures under the same number, "what version are you on?"
+stops being an answerable question.
+
+**Any change to a file that ships must bump the version in the same commit.** The
+shipped files are:
+
+- `.claude-plugin/` — both manifests
+- `skills/` — every `SKILL.md`, task, reference, and screenshot
+- `scripts/hawksoft-guard.mjs` — bundled into the strict variant
+
+Everything else (`docs/`, `README.md`, `AGENTS.md`, CI, the validators, the builder,
+the vendor translations) changes freely without a bump; none of it reaches an
+installed plugin.
+
+Bump all three places together — `package.json`, `.claude-plugin/plugin.json`, and
+the `version` on the marketplace entry — because `npm test` fails if they disagree.
+Choose the size by what an installed agency would notice:
+
+| Change | Bump |
+| --- | --- |
+| Wording, a clarified step, a captured screenshot, a fixed link | patch (1.2.0 → 1.2.1) |
+| A new task, a new skill, a new reference | minor (1.2.0 → 1.3.0) |
+| Routing, skill boundaries, or a safety rule that changes how an installed plugin behaves | major (1.2.0 → 2.0.0) |
+
+CI enforces this on every push and pull request via
+`npm run check:version -- <base>` (`scripts/check-version-bump.mjs`): it diffs the
+branch against its base, and if any shipped file changed without the version
+increasing, the build fails and names the files. Run it locally the same way:
+
+```bash
+npm run check:version -- origin/master
+```
+
+Tag the default branch after merging so a version can be returned to — see
+`docs/development.md` for the release steps.
 
 ## Skill and workflow terminology
 
@@ -186,6 +228,6 @@ route and every local link and image target resolving, screenshot-pending marker
 well-formed), and that no skill's shared-reference copy has drifted.
 
 The same suite runs in CI on every push and pull request
-(`.github/workflows/ci.yml`), together with `npm run build -- --all`. Installs track
-the default branch directly, so anything merged is live for installed users
-immediately — do not merge on red.
+(`.github/workflows/ci.yml`), together with `npm run build -- --all` and the
+[version-bump check](#versioning). Installs track the default branch directly, so
+anything merged is live for installed users immediately — do not merge on red.

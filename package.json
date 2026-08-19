@@ -6,6 +6,7 @@
     "validate:json": "node scripts/validate-json.mjs",
     "validate:skills": "node scripts/validate-skills.mjs",
     "sync:shared": "node scripts/sync-shared.mjs",
+    "check:version": "node scripts/check-version-bump.mjs",
     "test": "npm run validate:json && npm run validate:skills && node scripts/sync-shared.mjs --check",
     "new-skill": "node scripts/skill-builder.mjs",
     "build": "node scripts/build.mjs",

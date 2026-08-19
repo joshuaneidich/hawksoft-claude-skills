@@ -57,6 +57,7 @@ hawksoft-claude-skills/
 ├── scripts/
 │   ├── validate-json.mjs    ← validates plugin metadata consistency (`npm test`)
 │   ├── validate-skills.mjs  ← validates skill frontmatter, routing, links (`npm test`)
+│   ├── check-version-bump.mjs ← fails CI if shipped content changed without a bump
 │   ├── skill-builder.mjs    ← interactive builder (`npm run new-skill`)
 │   ├── build.mjs            ← vendor build orchestrator (`npm run build`)
 │   ├── translations/        ← one module per vendor (claude.mjs, chatgpt.mjs)
@@ -100,14 +101,42 @@ It checks three things:
   from `shared/references/`.
 
 The same suite runs in GitHub Actions on every push and pull request
-(`.github/workflows/ci.yml`), plus a full `npm run build -- --all` as a smoke
-test. Installs track the default branch directly, so a red commit here is live for
-every installed user — treat CI as the last gate before that.
+(`.github/workflows/ci.yml`), plus a full `npm run build -- --all` as a smoke test
+and the version-bump check below. Installs track the default branch directly, so a
+red commit here is live for every installed user — treat CI as the last gate before
+that.
 
 ## Releasing
 
-`/plugin marketplace add` follows the default branch, so every merge ships. Tag
-the commits that are known good so a version can be named and returned to:
+`/plugin marketplace add` follows the default branch, so every merge ships.
+
+### The version must move whenever shipped content does
+
+The version in `.claude-plugin/plugin.json` is the only handle on what an installed
+agency is running. If two commits ship different procedures under the same number,
+the number stops identifying anything — so **any change to a file that ships bumps
+the version in the same commit**: `.claude-plugin/`, anything under `skills/`, and
+`scripts/hawksoft-guard.mjs` (bundled into the strict variant). Docs, the README,
+CI, the validators, the builder, and the vendor translations never reach an
+installed plugin and need no bump.
+
+Bump `package.json`, `.claude-plugin/plugin.json`, and the marketplace entry's
+`version` together — `npm test` fails if they disagree. Size it by what an installed
+agency would notice: patch for wording, a clarified step, a captured screenshot;
+minor for a new task, skill, or reference; major for a routing, boundary, or safety
+change that alters how the plugin behaves.
+
+`scripts/check-version-bump.mjs` enforces this in CI on every push and pull request
+— it diffs the branch against its base and fails, naming the files, if shipped
+content moved while the version stood still. Run it locally the same way:
+
+```bash
+npm run check:version -- origin/master
+```
+
+### Tagging
+
+Tag the commits that are known good so a version can be named and returned to:
 
 ```bash
 # after merging to the default branch, with npm test green
@@ -117,10 +146,7 @@ git push origin v1.2.0
 
 Keep the tag equal to the `version` in `.claude-plugin/plugin.json` — `npm test`
 enforces that `package.json`, the manifest, and the marketplace entry already agree
-on it, so the tag is the only remaining place it can drift. Bump the version in
-`package.json` and `.claude-plugin/` (both files) in the same commit as the change
-that warrants it: patch for wording and fixes, minor for a new task or skill, major
-for a routing or safety change that alters how an installed plugin behaves.
+on it, so the tag is the only remaining place it can drift.
 
 To run a specific version rather than the tip, clone at the tag and load it
 directly:
