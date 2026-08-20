@@ -1,13 +1,33 @@
 ---
 name: hawksoft-operations
-description: Guide or perform approved HawkSoft agency-management workflows, especially logging client interactions (phone, walk-in, email, text, fax, mail, chat, online) — in the HawkSoft web app (agents.hawksoft.app) when it is available, otherwise the desktop Action menu. Use whenever HawkSoft is mentioned, or the user asks how to complete — or asks Claude to perform — a HawkSoft operation such as logging a call or documenting a client conversation.
+description: Guide or perform approved HawkSoft interaction logging and documentation — phone calls, walk-ins, email, text, fax, mail, chat, and online contacts — in the HawkSoft web app (agents.hawksoft.app) when it is available, otherwise the desktop Action menu. Use when the user asks to log, note, or document a client interaction in HawkSoft, or to send an email from HawkSoft. Policy changes, claims, client-record edits, documents and ACORD forms, and payments belong to the policy-servicing, claims, client-records, documents-and-forms, and billing-and-accounting skills.
 ---
 
 # HawkSoft Operations
 
-Use this skill for common procedures in the HawkSoft agency management system.
+Use this skill to **log and document client interactions** in the HawkSoft agency
+management system — the phone, walk-in, email, text, fax, mail, chat, and online
+procedures routed below.
 
 The instructions in this skill represent agency-approved procedures. Do not invent a workflow from general knowledge when a documented task procedure exists.
+
+## Related HawkSoft skills
+
+This plugin splits HawkSoft by category. If the request is about the record itself
+rather than documenting a contact, hand it to the sibling skill that owns it:
+
+| Request | Skill |
+| --- | --- |
+| Insert, endorse, cancel, renew, reinstate, move, or remarket a policy | `policy-servicing` |
+| File a claim, record proof of claim, update claim status | `claims` |
+| Change client info, duplicate, merge, archive a client, create a snapshot | `client-records` |
+| Scan or attach a document, print/create a document, ACORD forms, carrier downloads | `documents-and-forms` |
+| Post a payment, create an invoice, trust accounting | `billing-and-accounting` |
+
+Logging the *conversation about* one of those events still belongs here — for
+example, "log the call where the insured asked to cancel" is a log; performing the
+cancellation is `policy-servicing`. When a request is both, do the sibling task
+first, then log.
 
 ## Determine the requested mode
 
@@ -90,12 +110,11 @@ Read these files before proceeding:
 - `${CLAUDE_SKILL_DIR}/references/navigation.md`
 - `${CLAUDE_SKILL_DIR}/references/safety.md`
 
-Use these screenshots when the visible interface needs clarification:
-
-- `${CLAUDE_SKILL_DIR}/screenshots/phone-log/01-action-phone.png`
-- `${CLAUDE_SKILL_DIR}/screenshots/phone-log/02-create-log-window.png`
-
-If a screenshot file is unavailable, continue with the written procedure and explain that the screenshot should be added later.
+Screenshots for this workflow live in `${CLAUDE_SKILL_DIR}/screenshots/phone-log/` and
+are embedded at the step they illustrate inside the task file. Where a step carries a
+`screenshot-pending` comment marker instead of an image, the capture has not been taken
+yet: continue with the written procedure and say that the screenshot is still to be
+added.
 
 ### Log an outbound phone call
 
@@ -212,9 +231,11 @@ Read these files before proceeding:
 
 If the user asks for a HawkSoft operation that has no task file above:
 
-1. Say that the operation is not yet covered by an agency-approved procedure.
-2. In guidance mode, general HawkSoft advice may be offered only when clearly labeled as not agency-approved.
-3. In execution mode, do not perform the operation. Never execute an undocumented workflow.
+1. First check the sibling skills in [Related HawkSoft skills](#related-hawksoft-skills)
+   — most non-logging procedures are documented there, not here.
+2. Otherwise, say that the operation is not yet covered by an agency-approved procedure.
+3. In guidance mode, general HawkSoft advice may be offered only when clearly labeled as not agency-approved.
+4. In execution mode, do not perform the operation. Never execute an undocumented workflow.
 
 ## Client verification
 

@@ -19,6 +19,48 @@ The content should be useful in two layers:
 - Do not put private customer, policy, claim, payment, or protected personal information in repository examples.
 - Use fabricated test data in docs and examples.
 - Preserve the final-save guardrail: agents must pause for user approval before clicking or instructing a final action such as `Save Log`, `Save New Log` (web app), `Save`, `Submit`, `Bind`, `Cancel Policy`, or `Delete`.
+- **Bump the plugin version in the same commit as any change that ships.** See [Versioning](#versioning) — this one is enforced by CI, not left to memory.
+
+## Versioning
+
+`/plugin marketplace add` follows the default branch, so every merge is a release
+whether or not anyone calls it one. The version in `.claude-plugin/plugin.json` is
+therefore the only handle on what an installed agency is actually running — if two
+commits ship different procedures under the same number, "what version are you on?"
+stops being an answerable question.
+
+**Any change to a file that ships must bump the version in the same commit.** The
+shipped files are:
+
+- `.claude-plugin/` — both manifests
+- `skills/` — every `SKILL.md`, task, reference, and screenshot
+- `scripts/hawksoft-guard.mjs` — bundled into the strict variant
+
+Everything else (`docs/`, `README.md`, `AGENTS.md`, CI, the validators, the builder,
+the vendor translations) changes freely without a bump; none of it reaches an
+installed plugin.
+
+Bump all three places together — `package.json`, `.claude-plugin/plugin.json`, and
+the `version` on the marketplace entry — because `npm test` fails if they disagree.
+Choose the size by what an installed agency would notice:
+
+| Change | Bump |
+| --- | --- |
+| Wording, a clarified step, a captured screenshot, a fixed link | patch (1.2.0 → 1.2.1) |
+| A new task, a new skill, a new reference | minor (1.2.0 → 1.3.0) |
+| Routing, skill boundaries, or a safety rule that changes how an installed plugin behaves | major (1.2.0 → 2.0.0) |
+
+CI enforces this on every push and pull request via
+`npm run check:version -- <base>` (`scripts/check-version-bump.mjs`): it diffs the
+branch against its base, and if any shipped file changed without the version
+increasing, the build fails and names the files. Run it locally the same way:
+
+```bash
+npm run check:version -- origin/master
+```
+
+Tag the default branch after merging so a version can be returned to — see
+`docs/development.md` for the release steps.
 
 ## Skill and workflow terminology
 
@@ -26,6 +68,15 @@ The content should be useful in two layers:
 - A task is a detailed workflow for one specific procedure, such as logging an inbound phone call from an insured.
 - A reference file contains standards, templates, examples, terminology, or policy guidance used by one or more tasks.
 - A screenshot is visual context for a task. It should illustrate HawkSoft screens, not the code editor.
+
+Never embed a screenshot that has not been captured. `npm test` fails on any image
+whose file is missing, because a broken embed ships broken visual guidance into the
+execution path. For a planned-but-uncaptured shot, mark the step with a
+`screenshot-pending` HTML comment naming the path and the caption — see
+`docs/screenshots.md` for the exact form, the outstanding list, and the swap-back
+rule the validator enforces once the file exists. The written procedure must stand
+on its own either way; a screenshot clarifies a step, it is never the only source of
+one.
 
 ## Authoring branching logic in tasks
 
@@ -89,10 +140,15 @@ claude --plugin-dir .
 
 This flag requires a recent Claude Code release; see `docs/local-install.md` for troubleshooting and the marketplace-based install alternative.
 
-The current skill command is:
+Each skill is namespaced by the plugin name, so the current commands are:
 
 ```text
 /hawksoft:hawksoft-operations
+/hawksoft:policy-servicing
+/hawksoft:claims
+/hawksoft:client-records
+/hawksoft:documents-and-forms
+/hawksoft:billing-and-accounting
 ```
 
 ## Scaffolding new skills and tasks
@@ -141,6 +197,22 @@ User-facing usage lives in `README.md`. Contributor and technical documentation
 in `docs/development.md`. Keep this file (`AGENTS.md`) as the agent source of
 truth.
 
+## Skill boundaries
+
+Each skill owns one HawkSoft category and its description must claim only that
+category. `hawksoft-operations` owns **logging and documenting client
+interactions**; policy changes, claims, client-record edits, documents/ACORD forms,
+and payments belong to `policy-servicing`, `claims`, `client-records`,
+`documents-and-forms`, and `billing-and-accounting`. A description that claims the
+whole product ("use whenever HawkSoft is mentioned") wins requests that belong to a
+sibling, so keep the verbs disjoint and keep the hand-off table in
+`skills/hawksoft-operations/SKILL.md` current when a skill is added.
+
+`skills/` is the single source of truth for triggering. The Claude build overrides a
+skill description only for the `manual` variant; the auto-activating variants ship
+the source description verbatim, so a narrowing done in `SKILL.md` cannot be
+silently undone by the build.
+
 ## Validation
 
 Before committing changes, run:
@@ -149,4 +221,13 @@ Before committing changes, run:
 npm test
 ```
 
-This validates plugin JSON and the required skill frontmatter/content.
+It checks plugin metadata (required manifest fields, semver, `package.json` /
+`plugin.json` / marketplace-entry agreement, a `LICENSE` on disk), every skill
+(frontmatter present, `name` matching the directory, every `${CLAUDE_SKILL_DIR}`
+route and every local link and image target resolving, screenshot-pending markers
+well-formed), and that no skill's shared-reference copy has drifted.
+
+The same suite runs in CI on every push and pull request
+(`.github/workflows/ci.yml`), together with `npm run build -- --all` and the
+[version-bump check](#versioning). Installs track the default branch directly, so
+anything merged is live for installed users immediately — do not merge on red.

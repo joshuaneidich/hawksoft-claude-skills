@@ -1,15 +1,33 @@
 {
-  "$schema": "https://json.schemastore.org/claude-code-plugin-marketplace.json",
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "hawksoft-claude-skills",
   "displayName": "HawkSoft Claude Skills",
+  "version": "1.2.0",
   "description": "Marketplace metadata for the HawkSoft Claude plugin.",
   "owner": {
-    "name": "Access Insurance"
+    "name": "Access Insurance",
+    "url": "https://github.com/joshuaneidich/hawksoft-claude-skills"
   },
   "plugins": [
     {
       "name": "hawksoft",
-      "source": "./"
+      "source": "./",
+      "version": "1.2.0",
+      "description": "Agency-approved procedures for performing common HawkSoft client, policy, documentation, and servicing workflows.",
+      "category": "productivity",
+      "license": "MIT",
+      "homepage": "https://github.com/joshuaneidich/hawksoft-claude-skills#readme",
+      "repository": "https://github.com/joshuaneidich/hawksoft-claude-skills",
+      "keywords": [
+        "hawksoft",
+        "insurance",
+        "agency-management",
+        "policy-servicing",
+        "claims",
+        "client-records",
+        "billing",
+        "acord"
+      ]
     }
   ]
 }

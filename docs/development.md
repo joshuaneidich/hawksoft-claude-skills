@@ -36,6 +36,8 @@ HawkSoft, or a workflow with its own activation rules and safety posture).
 
 ```text
 hawksoft-claude-skills/
+├── .github/
+│   └── workflows/ci.yml     ← runs `npm test` + the full build on every push/PR
 ├── .claude-plugin/
 │   ├── plugin.json          ← plugin manifest (defines the /hawksoft: namespace)
 │   └── marketplace.json     ← lets this repo be added as a plugin marketplace
@@ -50,10 +52,12 @@ hawksoft-claude-skills/
 │   ├── development.md        ← this file
 │   ├── file-layout.md       ← why files live where they do
 │   ├── local-install.md     ← local testing and marketplace install commands
+│   ├── screenshots.md       ← outstanding screenshot captures and how to add one
 │   └── porting/             ← vendor porting notes (Claude, OpenAI, generic)
 ├── scripts/
-│   ├── validate-json.mjs    ← validates plugin JSON (run by `npm test`)
-│   ├── validate-skills.mjs  ← validates skill frontmatter/routing (run by `npm test`)
+│   ├── validate-json.mjs    ← validates plugin metadata consistency (`npm test`)
+│   ├── validate-skills.mjs  ← validates skill frontmatter, routing, links (`npm test`)
+│   ├── check-version-bump.mjs ← fails CI if shipped content changed without a bump
 │   ├── skill-builder.mjs    ← interactive builder (`npm run new-skill`)
 │   ├── build.mjs            ← vendor build orchestrator (`npm run build`)
 │   ├── translations/        ← one module per vendor (claude.mjs, chatgpt.mjs)
@@ -61,6 +65,7 @@ hawksoft-claude-skills/
 ├── dist/                    ← build output, one folder per vendor (gitignored)
 ├── AGENTS.md                ← source of truth for agents editing this repo
 ├── CLAUDE.md                ← short pointer that sends Claude to AGENTS.md
+├── LICENSE                  ← MIT
 └── package.json             ← npm scripts (test, new-skill, build)
 ```
 
@@ -82,7 +87,74 @@ Before committing, run:
 npm test
 ```
 
-This validates the plugin JSON and every skill's frontmatter and routing.
+It checks three things:
+
+- **Plugin metadata** (`validate-json.mjs`) — the manifest carries the fields an
+  install needs (`name`, `version`, `description`, `license`, `repository`,
+  `homepage`), the version is semver and identical in `package.json`, a `LICENSE`
+  exists, and any field the marketplace entry restates matches the manifest.
+- **Skills** (`validate-skills.mjs`) — `SKILL.md` frontmatter is present and its
+  `name` matches the directory (that pair is what makes `/hawksoft:<name>`
+  resolve), every `${CLAUDE_SKILL_DIR}` route exists, and **every local link and
+  image target in every skill markdown file resolves** — including screenshots.
+- **Shared references** (`sync-shared.mjs --check`) — no skill's copy has drifted
+  from `shared/references/`.
+
+The same suite runs in GitHub Actions on every push and pull request
+(`.github/workflows/ci.yml`), plus a full `npm run build -- --all` as a smoke test
+and the version-bump check below. Installs track the default branch directly, so a
+red commit here is live for every installed user — treat CI as the last gate before
+that.
+
+## Releasing
+
+`/plugin marketplace add` follows the default branch, so every merge ships.
+
+### The version must move whenever shipped content does
+
+The version in `.claude-plugin/plugin.json` is the only handle on what an installed
+agency is running. If two commits ship different procedures under the same number,
+the number stops identifying anything — so **any change to a file that ships bumps
+the version in the same commit**: `.claude-plugin/`, anything under `skills/`, and
+`scripts/hawksoft-guard.mjs` (bundled into the strict variant). Docs, the README,
+CI, the validators, the builder, and the vendor translations never reach an
+installed plugin and need no bump.
+
+Bump `package.json`, `.claude-plugin/plugin.json`, and the marketplace entry's
+`version` together — `npm test` fails if they disagree. Size it by what an installed
+agency would notice: patch for wording, a clarified step, a captured screenshot;
+minor for a new task, skill, or reference; major for a routing, boundary, or safety
+change that alters how the plugin behaves.
+
+`scripts/check-version-bump.mjs` enforces this in CI on every push and pull request
+— it diffs the branch against its base and fails, naming the files, if shipped
+content moved while the version stood still. Run it locally the same way:
+
+```bash
+npm run check:version -- origin/master
+```
+
+### Tagging
+
+Tag the commits that are known good so a version can be named and returned to:
+
+```bash
+# after merging to the default branch, with npm test green
+git tag -a v1.2.0 -m "HawkSoft plugin 1.2.0"
+git push origin v1.2.0
+```
+
+Keep the tag equal to the `version` in `.claude-plugin/plugin.json` — `npm test`
+enforces that `package.json`, the manifest, and the marketplace entry already agree
+on it, so the tag is the only remaining place it can drift.
+
+To run a specific version rather than the tip, clone at the tag and load it
+directly:
+
+```powershell
+git clone --branch v1.2.0 https://github.com/joshuaneidich/hawksoft-claude-skills
+claude --plugin-dir hawksoft-claude-skills
+```
 
 ## Interactive skill builder (`npm run new-skill`)
 
@@ -107,7 +179,9 @@ writes files straight into `skills/`. It has two tabs:
    `Action → Phone → To → Insured → Log`), trigger phrases, required information,
    numbered steps, and any screenshots.
 3. **Click "Create files."** It writes `SKILL.md`, the task file, and a screenshot
-   folder, and adds the task to the skill's routing section.
+   folder, and adds the task to the skill's routing section. Screenshots you name
+   here are recorded as `screenshot-pending` markers at the step they illustrate —
+   never as embeds, which would fail `npm test` until the capture exists.
 
 **Browse & edit** — see every skill and its files in a list, click any file to open
 its Markdown in an editor, and **Save** it back. This is where you perfect the
@@ -119,8 +193,9 @@ Every generated task automatically includes a **review-before-save checkpoint**
 and a **failure-handling** section, so new skills keep the agency safety posture
 by default. Use a different port with `npm run new-skill -- --port 5000`.
 
-The builder only *scaffolds* — review the wording and capture the referenced
-screenshots before relying on the procedure. It refuses to overwrite an existing
+The builder only *scaffolds* — review the wording and capture the pending
+screenshots (see [`screenshots.md`](screenshots.md)) before relying on the
+procedure. It refuses to overwrite an existing
 skill or task file. Creating files by hand (below) is fully supported too.
 
 ## The two surfaces (web app and desktop)
@@ -352,15 +427,30 @@ appear:
 
 ```text
 skills/hawksoft-operations/screenshots/phone-log/
-├── 01-action-phone.png
-├── 02-create-log-window.png
+├── 01-action-direction.png
+├── 02-phone-from-party.png
 ```
 
 Only include screenshots that directly help the agent perform a workflow. Git only
 tracks files, so intentionally empty screenshot folders keep a `.gitkeep`
-placeholder; remove it once real screenshots exist. Task files tell the agent to
-continue without a screenshot, and the validator only requires referenced `.md`
-files to exist — so referencing a not-yet-captured screenshot is expected.
+placeholder; remove it once real screenshots exist.
+
+**Never embed a screenshot that has not been captured.** `npm test` fails on an
+`![caption](path)` whose file is missing, because a broken embed ships broken
+visual guidance into the execution path and nothing else catches it. For a shot
+that is planned but not yet taken, mark the step instead:
+
+```markdown
+<!-- screenshot-pending: ../screenshots/phone-log/01-action-direction.png — Action window: Phone, choosing From vs To -->
+```
+
+The validator checks that the marker points inside the skill's `screenshots/`
+folder and that the file really is still missing — once the capture lands, `npm
+test` tells you to swap the marker for a real embed. The written procedure always
+stands on its own; a screenshot is clarification, never the only source of a step.
+
+The outstanding captures are tracked in
+[`screenshots.md`](screenshots.md).
 
 ## Using this beyond Claude
 

@@ -95,7 +95,7 @@ Select **From**.
 
 The breadcrumb now reads `Phone > From >`.
 
-![Action window: Phone, choosing From vs To](../screenshots/phone-log/01-action-direction.png)
+<!-- screenshot-pending: ../screenshots/phone-log/01-action-direction.png — Action window: Phone, choosing From vs To -->
 
 ### 5. Choose the party — Insured
 
@@ -111,7 +111,7 @@ choosing.)
 
 The breadcrumb now reads `Phone > From > Insured >`.
 
-![Action window: Phone > From > party list](../screenshots/phone-log/02-phone-from-party.png)
+<!-- screenshot-pending: ../screenshots/phone-log/02-phone-from-party.png — Action window: Phone > From > party list -->
 
 ### 6. Choose the action — Log
 
@@ -120,7 +120,7 @@ Print/Create, Send Email, ACORD Forms, Insert Policy, Done.**
 
 Select **Log**. This opens the **Create Log** editor.
 
-![Action window: Phone > From > Insured > action list](../screenshots/phone-log/03-insured-action-list.png)
+<!-- screenshot-pending: ../screenshots/phone-log/03-insured-action-list.png — Action window: Phone > From > Insured > action list -->
 
 ### 7. Confirm the Create Log window
 
@@ -131,7 +131,7 @@ Before typing, confirm the Create Log window shows:
 
 If the breadcrumb does not match, use **< Back** to correct the earlier selections.
 
-![Create Log window](../screenshots/phone-log/04-create-log.png)
+<!-- screenshot-pending: ../screenshots/phone-log/04-create-log.png — Create Log window -->
 
 ### 8. Write the phone note
 
@@ -205,7 +205,7 @@ Include the proposed client tag (category and reason) in what you show the user 
 [Review before saving](#10-review-before-saving); the tag is committed when the log
 is saved.
 
-![Add Tag dialog (client tag)](../screenshots/phone-log/05-add-client-tag.png)
+<!-- screenshot-pending: ../screenshots/phone-log/05-add-client-tag.png — Add Tag dialog (client tag) -->
 
 ### Optional: Add a task (suspense)
 

@@ -1,0 +1,44 @@
+name: CI
+
+# Installs from this repo track the default branch directly, so anything merged
+# here is live for every installed user immediately. Run the full validation
+# suite on every push and pull request.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate plugin and skills
+    runs-on: ubuntu-latest
+    steps:
+      # Full history: the version-bump check diffs this branch against its base.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # The repo has no runtime dependencies today; `npm ci` keeps working if
+      # that changes.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate JSON, skills, and shared references
+        run: npm test
+
+      - name: Build every vendor bundle
+        run: npm run build -- --all
+
+      # A merge to the default branch is a release, so shipped content must never
+      # change under a version someone is already running.
+      - name: Require a version bump when the shipped plugin changed
+        run: npm run check:version -- "${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}"
